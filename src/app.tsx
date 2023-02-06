@@ -1,31 +1,18 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
-import { createHashRouter, Link, Outlet, RouteObject, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouteObject, RouterProvider } from "react-router-dom";
 
 import * as docs from "mmd-docs";
 import { DocTree } from "./mmd-docs-types";
 
-const App = (props: { message: string }) => {
-    const [count, setCount] = useState(0);
-    const increment = useCallback(() => {
-        setCount(count => count + 1);
-    }, [count]);
-    return(<>
-        <h1>{props.message}</h1>
-        <h2>Count: {count}</h2>
-        <button onClick={increment}>Increment</button>
-    </>);
-};
+import { Navigation } from "./navigation";
+import { DocPage } from "./docpage";
 
-function Navigation(props: { docTree: DocTree, prefix?: string }) {
-    const prefix = props.prefix ?? "";
-    return <ul>
-        {props.docTree.map((e, i) => e.type === "doc"
-            ? <li key={i}><Link to={prefix + e.file.title}>{e.file.title}</Link></li>
-            : <li key={i}><Navigation docTree={e.entries} prefix={`${prefix}/${e.name}/`} /></li>
-        )}
-    </ul>;
-}
+const App = (props: { doctree: DocTree }) =>
+    <>
+        <Navigation docTree={props.doctree} />
+        <DocPage />
+    </>;
 
 function Pages(tree: DocTree, pathPrefix: string = ""): RouteObject[] {
     return tree.flatMap(e =>
@@ -38,11 +25,7 @@ function Pages(tree: DocTree, pathPrefix: string = ""): RouteObject[] {
 const router = createHashRouter([
     {
         path: "/",
-        element: <div>
-            <Navigation docTree={docs.content} />
-            <br/><br/>
-            <Outlet />
-        </div>,
+        element: <App doctree={docs.content} />,
         children: [
             ...Pages(docs.content),
             {

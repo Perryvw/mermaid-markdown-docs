@@ -3,20 +3,9 @@ import * as fs from "fs/promises";
 import * as path from "path";
 import MarkdownIt from "markdown-it";
 
-import type {DocFile, DocTree} from "./src/mmd-docs-types";
+import type {DocTree} from "./src/mmd-docs-types";
 
 const DOCS_PATH = "docs";
-
-const content: DocFile[] = [
-    {
-        title: "fileA",
-        content: "<h1>contentA</h1>"
-    },
-    {
-        title: "fileB",
-        content: "contentB"
-    }
-];
 
 var markdownIt = new MarkdownIt();
 
@@ -50,7 +39,6 @@ const docsContentPlugin: esbuild.Plugin = {
 
         build.onLoad({ filter: /.*/, namespace: 'mmd-ns' }, async () => {
             const docFiles = await findDocFiles(DOCS_PATH);
-            console.log(JSON.stringify(docFiles));
             return {
                 contents: `export const content = ${JSON.stringify(docFiles)};`,
                 loader: 'ts',
