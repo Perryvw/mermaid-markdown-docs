@@ -19,7 +19,8 @@ async function findDocFiles(dir: string): Promise<DocTree> {
     for await (const e of await fs.opendir(dir)) {
         if (e.isFile() && e.name.endsWith(".md"))
         {
-            result.push({type: "doc", file: { title: e.name, content: renderMarkdown((await fs.readFile(path.join(dir, e.name))).toString()) } });
+            const filePath = path.join(dir, e.name);
+            result.push({type: "doc", file: { path: filePath.substring(DOCS_PATH.length + 1), title: e.name, content: renderMarkdown((await fs.readFile(filePath)).toString()) } });
         }
         else if (e.isDirectory())
         {

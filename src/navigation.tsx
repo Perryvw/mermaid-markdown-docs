@@ -1,38 +1,40 @@
 import React, { ReactElement } from "react";
 import { Link } from "react-router-dom";
 import { DocTree } from "./mmd-docs-types";
+import { SIDEBAR_WIDTH } from "./styles";
+import { isHomepage } from "./util";
 
-export function Navigation(props: { docTree: DocTree }) {
-    return <div id="navigation">
+export const Navigation = (props: { docTree: DocTree }) =>
+    <div id="navigation" style={{
+        width: SIDEBAR_WIDTH
+    }}>
         <SearchBox />
         <ul>
-            {[...navigationItems(props.docTree, "")]}
+            <li><Link to={"/"}>Home</Link></li>
+            {navigationItems(props.docTree, "")}
         </ul>
     </div>;
-}
 
-function SearchBox() {
-    return <input type="text" placeholder="Search..." style={{
-        margin: 20
+const SearchBox = () =>
+    <input type="text" placeholder="Search..." style={{
+        margin: 20,
+        width: SIDEBAR_WIDTH -  40
     }} />;
-}
 
-function* navigationItems(docTree: DocTree, pathPrefix: string): Iterable<ReactElement> {
-    let i = 0;
-    for (const item of docTree)
-    {
-        if (item.type === "doc") {
-            yield <li key={i}><Link to={pathPrefix + item.file.title}>{item.file.title}</Link></li>
-        }
-        else
-        {
-            yield <li key={i}>
-                <ul>
-                    {[...navigationItems(item.entries, `${pathPrefix}/${item.name}/`)]}
-                </ul>
-            </li>;
-        }
-
-        i++;
-    }
+function navigationItems(docTree: DocTree, pathPrefix: string): ReactElement[] {
+    return docTree
+        .filter(item => item.type !== "doc" || !isHomepage(item.file)) // filter out homepage
+        .map((item, i) => {
+            if (item.type === "doc") {
+                return <li key={i + 1}><Link to={pathPrefix + item.file.title}>{item.file.title}</Link></li>
+            }
+            else
+            {
+                return <li key={i + 1}>
+                    <ul>
+                        {[...navigationItems(item.entries, `${pathPrefix}/${item.name}/`)]}
+                    </ul>
+                </li>;
+            }
+        });
 }
