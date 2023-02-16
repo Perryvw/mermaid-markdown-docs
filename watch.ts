@@ -1,17 +1,24 @@
 import * as esbuild from "esbuild";
 import * as fs from "fs/promises";
 import * as path from "path";
+
 import MarkdownIt from "markdown-it";
+import markdownItFrontMatter from "markdown-it-front-matter";
+import { parse as parseYaml } from "yaml";
 
 import type {DocTree} from "./src/mmd-docs-types";
 
 const DOCS_PATH = "docs";
 
-var markdownIt = new MarkdownIt();
+let lastFrontMatter = {};
+const markdownIt = new MarkdownIt()
+    .use(markdownItFrontMatter, frontMatter => {
+        lastFrontMatter = parseYaml(frontMatter);
+    });
 
-function renderMarkdown(markdown: string): string
+function renderMarkdown(markdown: string): { html: string, frontMatter: Record<string, string> }
 {
-    return markdownIt.render(markdown);
+    return { html: markdownIt.render(markdown), frontMatter: lastFrontMatter };
 }
 
 async function findDocFiles(dir: string): Promise<DocTree> {
@@ -20,7 +27,8 @@ async function findDocFiles(dir: string): Promise<DocTree> {
         if (e.isFile() && e.name.endsWith(".md"))
         {
             const filePath = path.join(dir, e.name);
-            result.push({type: "doc", file: { path: filePath.substring(DOCS_PATH.length + 1), title: e.name, content: renderMarkdown((await fs.readFile(filePath)).toString()) } });
+            const { html, frontMatter } = renderMarkdown((await fs.readFile(filePath)).toString());
+            result.push({type: "doc", file: { path: filePath.substring(DOCS_PATH.length + 1), title: frontMatter["title"] ?? e.name, content: html } });
         }
         else if (e.isDirectory())
         {

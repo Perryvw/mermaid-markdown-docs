@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { DocTree } from "./mmd-docs-types";
 import { SIDEBAR_WIDTH } from "./styles";
 import { isHomepage } from "./util";
@@ -10,7 +10,7 @@ export const Navigation = (props: { docTree: DocTree }) =>
     }}>
         <SearchBox />
         <ul>
-            <li><Link to={"/"}>Home</Link></li>
+            <li><NavLink to={"/"}>Home</NavLink></li>
             {navigationItems(props.docTree, "")}
         </ul>
     </div>;
@@ -26,7 +26,7 @@ function navigationItems(docTree: DocTree, pathPrefix: string): ReactElement[] {
         .filter(item => item.type !== "doc" || !isHomepage(item.file)) // filter out homepage
         .map((item, i) => {
             if (item.type === "doc") {
-                return <li key={i + 1}><Link to={pathPrefix + item.file.title}>{item.file.title}</Link></li>
+                return <li key={i + 1}><NavLink to={pathPrefix + item.file.title}>{item.file.title}</NavLink></li>
             }
             else
             {

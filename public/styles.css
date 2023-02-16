@@ -16,6 +16,5 @@ html, body {
     box-sizing: border-box;
     padding: 20;
     float: left;
-    width: calc(100% - 400px);
     height: 100vh;
 }

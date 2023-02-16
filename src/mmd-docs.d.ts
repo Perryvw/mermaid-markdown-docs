@@ -1,5 +1,3 @@
-/// <reference path="type.d.ts" />
-
 declare module "mmd-docs" {
-    export const content: DocTree;
+    export const content: import("./mmd-docs-types").DocTree;
 }
