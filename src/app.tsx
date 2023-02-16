@@ -14,7 +14,6 @@ const titles = createTitleMap(docs.content);
 const App = (props: { doctree: DocTree }) => {
     let curLoc = useLocation();
     useEffect(() => {
-        console.log(titles, curLoc.pathname, curLoc, titles[curLoc.pathname]);
         document.title = titles[curLoc.pathname] ?? curLoc.pathname;
     }, [curLoc]);
 
@@ -24,14 +23,18 @@ const App = (props: { doctree: DocTree }) => {
     </>;
 }
 
-function Page(path: string, content: string) {
-    return { path, element: <div dangerouslySetInnerHTML={{__html: content}} /> };
+function Page(path: string, docFile: DocFile) {
+    return { path, element: <>
+        <h1>{docFile.title}</h1>
+        <div dangerouslySetInnerHTML={{__html: docFile.content}} />
+    </> 
+    };
 }
 
 function Pages(tree: DocTree, pathPrefix: string = ""): RouteObject[] {
     return tree.flatMap(e =>
         e.type === "doc"
-            ? [Page(`${pathPrefix}/${e.file.title}`, e.file.content)]
+            ? [Page(`${pathPrefix}/${e.file.title}`, e.file)]
             : Pages(e.entries, `${pathPrefix}/${e.name}`)
     );
 }
