@@ -4,14 +4,33 @@ import * as path from "path";
 
 import MarkdownIt from "markdown-it";
 import markdownItFrontMatter from "markdown-it-front-matter";
+import Mermaid from "mermaid";
 import { parse as parseYaml } from "yaml";
 
 import type {DocTree} from "./src/mmd-docs-types";
+import { pageTitle } from "./util";
 
 const DOCS_PATH = "docs";
 
+let mermaidId = 0;
+
 let lastFrontMatter = {};
 const markdownIt = new MarkdownIt()
+    .use((md: MarkdownIt) => {
+        const defaultRenderer = md.renderer.rules.fence!.bind(md.renderer.rules);
+        md.renderer.rules.fence = (tokens, idx, opts, env, self) => {
+            const token = tokens[idx];
+            if (token.tag === "code" && token.info === "mermaid")
+            {
+                //const svg = Mermaid.mermaidAPI.render(`mermaid-diag${mermaidId++}`, token.content);
+                return `<pre class="mermaid">${token.content}</pre>`;
+            }
+            else
+            {
+                return defaultRenderer(tokens, idx, opts, env, self);
+            }
+        };
+    })
     .use(markdownItFrontMatter, frontMatter => {
         lastFrontMatter = parseYaml(frontMatter);
     });

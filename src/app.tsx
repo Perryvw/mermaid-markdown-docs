@@ -8,6 +8,7 @@ import { DocFile, DocTree, DocTreeEntry } from "./mmd-docs-types";
 import { Navigation } from "./navigation";
 import { DocPage } from "./docpage";
 import { isHomepage } from "./util";
+import mermaid from "mermaid";
 
 const titles = createTitleMap(docs.content);
 
@@ -15,6 +16,8 @@ const App = (props: { doctree: DocTree }) => {
     let curLoc = useLocation();
     useEffect(() => {
         document.title = titles[curLoc.pathname] ?? curLoc.pathname;
+
+        mermaid.contentLoaded();
     }, [curLoc]);
 
     return <>

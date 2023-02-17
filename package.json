@@ -1,12 +1,12 @@
 {
-  "type": "module",
   "scripts": {
-    "dev": "ts-node-esm watch.ts"
+    "dev": "ts-node watch.ts"
   },
   "dependencies": {
     "esbuild": "^0.17.5",
     "markdown-it": "^13.0.1",
     "markdown-it-front-matter": "^0.2.3",
+    "mermaid": "^9.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.0",
