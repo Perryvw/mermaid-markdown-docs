@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import * as esbuild from "esbuild";
 import * as fs from "fs/promises";
 import * as path from "path";
@@ -76,7 +75,7 @@ const docsContentPlugin: esbuild.Plugin = {
 };
 
 // Serve/start functionality
-(async function() {
+export async function serve() {
     let context = await esbuild.context({
         outfile: path.join(STATIC_DIR, "bundle.js"),
         entryPoints: [path.join(__dirname, "../app/app.js")],
@@ -91,9 +90,7 @@ const docsContentPlugin: esbuild.Plugin = {
         servedir: STATIC_DIR
     });
 
-    console.log(`serving at ${host}:${port}`);
-
-
+    console.log(`Started localhost documentation server at ${host}:${port}`);
 
     const watcher = fs.watch(DOCS_PATH, { recursive: true, });
     for await (const event of watcher)
@@ -103,4 +100,4 @@ const docsContentPlugin: esbuild.Plugin = {
             context.rebuild();
         }
     }
-})();
+}

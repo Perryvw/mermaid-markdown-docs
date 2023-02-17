@@ -1,11 +1,11 @@
 {
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src/build_scripts/watch.ts"
+    "dev": "tsc && concurrently \"tsc --watch\" \"npm --prefix test/testproject run start\""
   },
   "main": "watch.js",
   "bin": {
-    "mermaid-markdown-docs": "./dist/build_scripts/watch.js"
+    "mermaid-markdown-docs": "./dist/cli/cli.js"
   },
   "dependencies": {
     "esbuild": "^0.17.5",
@@ -21,6 +21,7 @@
     "@types/markdown-it": "^12.2.3",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "concurrently": "^7.6.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   }
