@@ -23,14 +23,16 @@ const SearchBox = () =>
 
 function navigationItems(docTree: DocTree, pathPrefix: string): ReactElement[] {
     return docTree
-        .filter(item => item.type !== "doc" || !isHomepage(item.file)) // filter out homepage
+        .filter(item => item.type !== "doc" || !isHomepage(item.file))  // filter out homepage
+        .filter(item => item.type !== "dir" || item.entries.length > 0) // filter out empty directories
         .map((item, i) => {
             if (item.type === "doc") {
-                return <li key={i + 1}><NavLink to={pathPrefix + item.file.title}>{item.file.title}</NavLink></li>
+                return <li key={i + 1}><NavLink to={pathPrefix + item.file.title} className={"navlink"}>{item.file.title}</NavLink></li>
             }
             else
             {
                 return <li key={i + 1}>
+                    <div>{item.name}</div>
                     <ul>
                         {[...navigationItems(item.entries, `${pathPrefix}/${item.name}/`)]}
                     </ul>

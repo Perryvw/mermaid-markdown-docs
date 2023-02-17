@@ -37,6 +37,7 @@ const markdownIt = new MarkdownIt()
 
 function renderMarkdown(markdown: string): { html: string, frontMatter: Record<string, string> }
 {
+    lastFrontMatter = {};
     return { html: markdownIt.render(markdown), frontMatter: lastFrontMatter };
 }
 
@@ -47,11 +48,11 @@ async function findDocFiles(dir: string): Promise<DocTree> {
         {
             const filePath = path.join(dir, e.name);
             const { html, frontMatter } = renderMarkdown((await fs.readFile(filePath)).toString());
-            result.push({type: "doc", file: { path: filePath.substring(DOCS_PATH.length + 1), title: frontMatter["title"] ?? e.name, content: html } });
+            result.push({type: "doc", file: { path: filePath.substring(DOCS_PATH.length + 1), title: frontMatter["title"] ?? pageTitle(e.name), content: html } });
         }
         else if (e.isDirectory())
         {
-            result.push({ type: "dir", name: e.name, entries: await findDocFiles(path.join(dir, e.name))});
+            result.push({ type: "dir", name: pageTitle(e.name), entries: await findDocFiles(path.join(dir, e.name))});
         }
     }
     return result;
