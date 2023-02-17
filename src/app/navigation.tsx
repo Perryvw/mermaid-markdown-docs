@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { DocTree } from "./mmd-docs-types";
+import { DocTree } from "../common/mmd-docs-types";
 import { SIDEBAR_WIDTH } from "./styles";
 import { isHomepage } from "./util";
 

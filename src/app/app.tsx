@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createHashRouter, Link, RouteObject, RouterProvider, useLocation } from "react-router-dom";
 
 import * as docs from "mmd-docs";
-import { DocFile, DocTree, DocTreeEntry } from "./mmd-docs-types";
+import { DocFile, DocTree, DocTreeEntry } from "../common/mmd-docs-types";
 
 import { Navigation } from "./navigation";
 import { DocPage } from "./docpage";

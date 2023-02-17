@@ -1,6 +1,11 @@
 {
   "scripts": {
-    "dev": "ts-node watch.ts"
+    "build": "tsc",
+    "dev": "ts-node src/build_scripts/watch.ts"
+  },
+  "main": "watch.js",
+  "bin": {
+    "mermaid-markdown-docs": "./dist/build_scripts/watch.js"
   },
   "dependencies": {
     "esbuild": "^0.17.5",

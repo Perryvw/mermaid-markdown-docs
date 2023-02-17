@@ -1,18 +1,18 @@
+#!/usr/bin/env node
 import * as esbuild from "esbuild";
 import * as fs from "fs/promises";
 import * as path from "path";
 
 import MarkdownIt from "markdown-it";
 import markdownItFrontMatter from "markdown-it-front-matter";
-import Mermaid from "mermaid";
 import { parse as parseYaml } from "yaml";
 
-import type {DocTree} from "./src/mmd-docs-types";
+import type {DocTree} from "../common/mmd-docs-types";
 import { pageTitle } from "./util";
 
 const DOCS_PATH = "docs";
-
-let mermaidId = 0;
+const STATIC_DIR = path.join(__dirname, "..", "static");
+const OUTPUT_DIR = "generated";
 
 let lastFrontMatter = {};
 const markdownIt = new MarkdownIt()
@@ -22,7 +22,6 @@ const markdownIt = new MarkdownIt()
             const token = tokens[idx];
             if (token.tag === "code" && token.info === "mermaid")
             {
-                //const svg = Mermaid.mermaidAPI.render(`mermaid-diag${mermaidId++}`, token.content);
                 return `<pre class="mermaid">${token.content}</pre>`;
             }
             else
@@ -76,10 +75,11 @@ const docsContentPlugin: esbuild.Plugin = {
     }
 };
 
+// Serve/start functionality
 (async function() {
     let context = await esbuild.context({
-        outfile: "public/bundle.js",
-        entryPoints: ["src/app.tsx"],
+        outfile: path.join(STATIC_DIR, "bundle.js"),
+        entryPoints: [path.join(__dirname, "../app/app.js")],
         bundle: true,
         sourcemap: true,
         plugins: [docsContentPlugin]
@@ -88,7 +88,7 @@ const docsContentPlugin: esbuild.Plugin = {
     context.rebuild();
 
     let { host, port } = await context.serve({
-        servedir: "public"
+        servedir: STATIC_DIR
     });
 
     console.log(`serving at ${host}:${port}`);
