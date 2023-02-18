@@ -42,7 +42,7 @@ export function SearchBox(props: { docTree: DocTree }) {
         }}
             onChange={handleChange}
         />
-        {searchResults.map((r, i) => <Link to={r.link} key={i}>
+        {searchResults.map((r, i) => <Link className="search-result" to={r.link} key={i}>
             <h3>{r.title}</h3>
             <p>{r.exerpt}</p>
         </Link>)}

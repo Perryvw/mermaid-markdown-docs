@@ -9,13 +9,14 @@ import { Navigation } from "./navigation";
 import { DocPage } from "./docpage";
 import { isHomepage } from "./util";
 import mermaid from "mermaid";
+import { iterateDocFiles } from "../build/util";
 
 const titles = createTitleMap(docs.content);
 
 const App = (props: { doctree: DocTree }) => {
     let curLoc = useLocation();
     useEffect(() => {
-        document.title = titles[curLoc.pathname] ?? curLoc.pathname;
+        document.title = titles[curLoc.pathname.substring(1)] ?? curLoc.pathname;
 
         mermaid.contentLoaded();
     }, [curLoc]);
@@ -26,19 +27,20 @@ const App = (props: { doctree: DocTree }) => {
     </>;
 }
 
-function Page(path: string, docFile: DocFile) {
-    return { path, element: <>
+function Page(docFile: DocFile) {
+    console.log(docFile.path)
+    return { path: docFile.path, element: <>
         <h1>{docFile.title}</h1>
         <div dangerouslySetInnerHTML={{__html: docFile.html}} />
     </> 
     };
 }
 
-function Pages(tree: DocTree, pathPrefix: string = ""): RouteObject[] {
+function Pages(tree: DocTree): RouteObject[] {
     return tree.flatMap(e =>
         e.type === "doc"
-            ? [Page(`${pathPrefix}/${e.file.title}`, e.file)]
-            : Pages(e.entries, `${pathPrefix}/${e.name}`)
+            ? [Page(e.file)]
+            : Pages(e.entries)
     );
 }
 
@@ -47,7 +49,7 @@ function DirectoryPage(tree: DocTree) {
         <h1>Table of Contents</h1>
         <ul>
             {tree.map((e, i) => e.type === "doc" 
-                ? <li key={i}><Link to={e.file.title}>{e.file.title}</Link></li>
+                ? <li key={i}><Link to={e.file.path}>{e.file.title}</Link></li>
                 : <li key={i}><Link to={e.name}>{e.name}</Link></li>
             )}
         </ul>
@@ -69,24 +71,9 @@ function HomePage(tree: DocTree) {
 function createTitleMap(tree: DocTree): Record<string, string> {
     const titles: Record<string, string> = {};
 
-    const handleEntry = (e: DocTreeEntry, pathPrefix: string) => {
-        if (e.type === "doc")
-        {
-            const path = `${pathPrefix}/${encodeURIComponent(e.file.title)}`;
-            titles[path] = e.file.title;
-        }
-        else
-        {
-            const prefix = `${pathPrefix}/${encodeURIComponent(e.name)}`;
-            for (const child of e.entries)
-            {
-                handleEntry(child, prefix);
-            }
-        }
-    }
-
-    for (const e of tree) {
-        handleEntry(e, "");
+    for (const docFile of iterateDocFiles(tree))
+    {
+        titles[docFile.path] = docFile.title;
     }
 
     return titles;

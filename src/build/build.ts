@@ -11,7 +11,7 @@ const STATIC_DIR = path.join(__dirname, "..", "static");
 // Serve/start functionality
 export async function build(): Promise<esbuild.BuildContext> {
 
-    const docTree = await findDocFiles(DOCS_PATH);
+    const docTree = await findDocFiles(DOCS_PATH, DOCS_PATH);
     const searchIndex = await buildSearchIndex(docTree);
 
     let context = await esbuild.context({

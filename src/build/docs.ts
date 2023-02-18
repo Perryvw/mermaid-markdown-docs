@@ -35,19 +35,19 @@ function renderMarkdown(markdown: string): { html: string, frontMatter: Record<s
     return { html: markdownIt.render(markdown), frontMatter: lastFrontMatter };
 }
 
-export async function findDocFiles(docsDirectory: string): Promise<DocTree> {
+export async function findDocFiles(docsDirectory: string, pathPrefix: string): Promise<DocTree> {
     const result: DocTree = [];
     for await (const e of await fs.opendir(docsDirectory)) {
         if (e.isFile() && e.name.endsWith(".md"))
         {
-            const filePath = path.join(docsDirectory, e.name);
+            const filePath = `${docsDirectory}/${e.name}`;
             const markdown = (await fs.readFile(filePath)).toString()
             const { html, frontMatter } = renderMarkdown(markdown);
-            result.push({type: "doc", file: { path: filePath.substring(docsDirectory.length + 1), title: frontMatter["title"] ?? pageTitle(e.name), markdown, html } });
+            result.push({type: "doc", file: { path: filePath.substring(pathPrefix.length + 1), title: frontMatter["title"] ?? pageTitle(e.name), markdown, html } });
         }
         else if (e.isDirectory())
         {
-            result.push({ type: "dir", name: pageTitle(e.name), entries: await findDocFiles(path.join(docsDirectory, e.name))});
+            result.push({ type: "dir", name: pageTitle(e.name), entries: await findDocFiles(`${docsDirectory}/${e.name}`, pathPrefix)});
         }
     }
     return result;
