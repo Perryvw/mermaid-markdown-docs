@@ -3,7 +3,7 @@ import Lunr from "lunr";
 import { DocTree } from "../common/mmd-docs-types";
 import { iterateDocFiles } from "./util";
 
-export async function buildSearchIndex(tree: DocTree)
+export function buildSearchIndex(tree: DocTree): string
 {
     const index = Lunr(function() {
 

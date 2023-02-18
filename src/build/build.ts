@@ -12,7 +12,7 @@ const STATIC_DIR = path.join(__dirname, "..", "static");
 export async function build(): Promise<esbuild.BuildContext> {
 
     const docTree = await findDocFiles(DOCS_PATH, DOCS_PATH);
-    const searchIndex = await buildSearchIndex(docTree);
+    const searchIndex = buildSearchIndex(docTree);
 
     let context = await esbuild.context({
         outfile: path.join(STATIC_DIR, "bundle.js"),

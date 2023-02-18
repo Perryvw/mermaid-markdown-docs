@@ -1,9 +1,9 @@
-import * as path from "path";
 import * as esbuild from "esbuild";
 import * as fs from "fs/promises";
 
 import MarkdownIt from "markdown-it";
 import markdownItFrontMatter from "markdown-it-front-matter";
+import markdownItMermaidPlugin from "./markdown-it-mermaid-plugin";
 import { parse as parseYaml } from "yaml";
 
 import type {DocTree} from "../common/mmd-docs-types";
@@ -11,20 +11,7 @@ import { pageTitle } from "./util";
 
 let lastFrontMatter = {};
 const markdownIt = new MarkdownIt()
-    .use((md: MarkdownIt) => {
-        const defaultRenderer = md.renderer.rules.fence!.bind(md.renderer.rules);
-        md.renderer.rules.fence = (tokens, idx, opts, env, self) => {
-            const token = tokens[idx];
-            if (token.tag === "code" && token.info === "mermaid")
-            {
-                return `<pre class="mermaid">${token.content}</pre>`;
-            }
-            else
-            {
-                return defaultRenderer(tokens, idx, opts, env, self);
-            }
-        };
-    })
+    .use(markdownItMermaidPlugin)
     .use(markdownItFrontMatter, frontMatter => {
         lastFrontMatter = parseYaml(frontMatter);
     });
