@@ -22,7 +22,6 @@ function navigationItems(docTree: DocTree): ReactElement[] {
         .filter(item => item.type !== "dir" || item.entries.length > 0) // filter out empty directories
         .map((item, i) => {
             if (item.type === "doc") {
-                console.log("nav", item.file.path);
                 return <li key={i + 1}><NavLink to={item.file.path} className={"navlink"}>{item.file.title}</NavLink></li>
             }
             else

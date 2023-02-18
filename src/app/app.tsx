@@ -28,7 +28,6 @@ const App = (props: { doctree: DocTree }) => {
 }
 
 function Page(docFile: DocFile) {
-    console.log(docFile.path)
     return { path: docFile.path, element: <>
         <h1>{docFile.title}</h1>
         <div dangerouslySetInnerHTML={{__html: docFile.html}} />

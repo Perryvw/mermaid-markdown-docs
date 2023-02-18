@@ -1,3 +1,12 @@
+:root {
+	-moz-tab-size: 4;
+	tab-size: 4;
+
+	--contrast-color: #000;
+	--border-color: hsl(216deg 25% 30%);
+	--muted-bg-color: #e4e7ec;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -24,13 +33,26 @@ html, body {
     background-color: lightgreen;
 }
 
-:root {
-	-moz-tab-size: 4;
-	tab-size: 4;
+a.search-result
+{
+	display: block;
+	color: black;
+	background-color: lightgreen;
+	text-decoration: none;
 
-	--contrast-color: #000;
-	--border-color: hsl(216deg 25% 30%);
-	--muted-bg-color: #e4e7ec;
+	padding: 3px 15px;
+	margin-bottom: 2px;
+}
+
+a.search-result h3, a.search-result p
+{
+	margin: 0;
+	padding: 0;
+}
+
+a.search-result .search-highlight
+{
+	background-color: orange;
 }
 
 /*!
