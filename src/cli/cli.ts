@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { serve } from "../build/watch";
+import { build } from "../build/build";
+import { serve } from "../build/serve";
 
 enum ActionType {
     Error,
@@ -55,8 +56,7 @@ mermaid-markdown-docs serve [options]       Start a server and file watcher for 
 }
 else if (action.type === ActionType.Build)
 {
-    console.log("building");
-    throw "not implemented";
+    build();
 }
 else if (action.type === ActionType.Serve)
 {

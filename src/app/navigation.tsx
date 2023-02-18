@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { DocTree } from "../common/mmd-docs-types";
+import { SearchBox } from "./searchbox";
 import { SIDEBAR_WIDTH } from "./styles";
 import { isHomepage } from "./util";
 
@@ -8,18 +9,12 @@ export const Navigation = (props: { docTree: DocTree }) =>
     <div id="navigation" style={{
         width: SIDEBAR_WIDTH
     }}>
-        <SearchBox />
+        <SearchBox docTree={props.docTree} />
         <ul>
             <li><NavLink to={"/"}>Home</NavLink></li>
             {navigationItems(props.docTree, "")}
         </ul>
     </div>;
-
-const SearchBox = () =>
-    <input type="text" placeholder="Search..." style={{
-        margin: 20,
-        width: SIDEBAR_WIDTH -  40
-    }} />;
 
 function navigationItems(docTree: DocTree, pathPrefix: string): ReactElement[] {
     return docTree

@@ -29,7 +29,7 @@ const App = (props: { doctree: DocTree }) => {
 function Page(path: string, docFile: DocFile) {
     return { path, element: <>
         <h1>{docFile.title}</h1>
-        <div dangerouslySetInnerHTML={{__html: docFile.content}} />
+        <div dangerouslySetInnerHTML={{__html: docFile.html}} />
     </> 
     };
 }
@@ -58,7 +58,7 @@ function HomePage(tree: DocTree) {
     const homepage = tree.find(e => e.type === "doc" && isHomepage(e.file)) as { file: DocFile };
     if (homepage)
     {
-        return <div dangerouslySetInnerHTML={{__html: homepage.file.content}} />;
+        return <div dangerouslySetInnerHTML={{__html: homepage.file.html}} />;
     }
     else
     {
