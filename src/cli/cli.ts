@@ -56,11 +56,11 @@ mermaid-markdown-docs serve [options]       Start a server and file watcher for 
 }
 else if (action.type === ActionType.Build)
 {
-    build();
+    build({});
 }
 else if (action.type === ActionType.Serve)
 {
-    serve();
+    serve({});
 }
 else
 {
