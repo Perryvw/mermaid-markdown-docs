@@ -1,5 +1,4 @@
 import * as esbuild from "esbuild";
-import * as fs from "fs/promises";
 import * as path from "path";
 
 import { docsContentPlugin, findDocFiles } from "./docs";
@@ -10,7 +9,7 @@ const OUTPUT_DIR = "generated";
 const STATIC_DIR = path.join(__dirname, "..", "static");
 
 // Serve/start functionality
-export async function build() {
+export async function build(): Promise<esbuild.BuildContext> {
 
     const docTree = await findDocFiles(DOCS_PATH);
     const searchIndex = await buildSearchIndex(docTree);
@@ -24,4 +23,6 @@ export async function build() {
     });
 
     context.rebuild();
+
+    return context;
 }
