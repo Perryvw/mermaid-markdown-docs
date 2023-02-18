@@ -56,7 +56,7 @@ mermaid-markdown-docs serve [options]       Start a server and file watcher for 
 }
 else if (action.type === ActionType.Build)
 {
-    build({});
+    build({}).then(process.exit(0));
 }
 else if (action.type === ActionType.Serve)
 {

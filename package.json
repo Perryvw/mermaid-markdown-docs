@@ -8,6 +8,7 @@
     "mermaid-markdown-docs": "./dist/cli/cli.js"
   },
   "dependencies": {
+    "chokidar": "^3.5.3",
     "esbuild": "^0.17.5",
     "lunr": "^2.3.9",
     "markdown-it": "^13.0.1",

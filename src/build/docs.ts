@@ -40,7 +40,7 @@ export async function findDocFiles(docsDirectory: string, pathPrefix: string): P
     return result;
 }
 
-export function docsContentPlugin(docsTree: DocTree, searchIndex: string): esbuild.Plugin
+export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild.Plugin
 {
     return {
         name: "mmd-content-plugin",
@@ -52,6 +52,7 @@ export function docsContentPlugin(docsTree: DocTree, searchIndex: string): esbui
             }));
 
             build.onLoad({ filter: /.*/, namespace: 'mmd-ns' }, async () => {
+                const docsTree = await findDocFiles(docsDir, docsDir);
                 return {
                     contents: `export const content = ${JSON.stringify(docsTree)};`,
                     loader: 'ts',

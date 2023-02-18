@@ -3,3 +3,4 @@ dist/*
 !dist/static
 dist/static/bundle.js
 dist/static/bundle.js.map
+test/testproject/out/
