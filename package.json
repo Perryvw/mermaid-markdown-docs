@@ -1,6 +1,6 @@
 {
   "name": "mermaid-markdown-docs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A documentation framework allowing you to easily make a documentation website from markdown files, with mermaid diagrams and search built-in!",
   "repository": "https://github.com/Perryvw/mermaid-markdown-docs",
   "bugs": {
