@@ -1,14 +1,15 @@
 # Mermaid-Markdown-Docs
 
-Mermaid-Markdown-Docs is a package to easily build documentation websites based on markdown files, with minimal setup.
+Mermaid-Markdown-Docs is a framework to easily create documentation websites from markdown files, with minimal setup.
 
-## Features built-in:
+## Built-in features:
 
 * Create a documentation website entirely from markdown files
 * Built-in support for [Mermaid diagrams](https://mermaid.js.org/)
 * Built-in search functionality using [Lunr.js](https://lunrjs.com/)
 * Development server with automatic reloading when changes are detected
 * Fast build speeds thanks to running on esbuild
+* Independent output bundle, it is just html and js, it can run anywhere!
 
 # Installation
 

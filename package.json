@@ -7,6 +7,20 @@
     "url": "https://github.com/Perryvw/mermaid-markdown-docs/issues"
   },
   "license": "MIT",
+  "keywords": [
+    "documentation",
+    "markdown",
+    "mermaid",
+    "search",
+    "esbuild"
+  ],
+  "files": [
+      "dist/app/**/*",
+      "dist/build/**/*",
+      "dist/static/*.html",
+      "dist/static/*.css"
+  ],
+
   "scripts": {
     "build": "tsc",
     "dev": "tsc && concurrently \"tsc --watch\" \"npm --prefix test/testproject run start\""
