@@ -7,7 +7,7 @@ import { DocFile, DocTree, DocTreeEntry } from "../common/mmd-docs-types";
 
 import { Navigation } from "./navigation";
 import { DocPage } from "./docpage";
-import { isHomepage } from "./util";
+import { isHomepage, stripExtension } from "./util";
 import mermaid from "mermaid";
 import { iterateDocFiles } from "../build/util";
 
@@ -31,7 +31,7 @@ const App = (props: { doctree: DocTree }) => {
 }
 
 function Page(docFile: DocFile) {
-    return { path: docFile.path, element: <>
+    return { path: stripExtension(docFile.path), element: <>
         <h1>{docFile.title}</h1>
         <div dangerouslySetInnerHTML={{__html: docFile.html}} />
     </> 
@@ -51,7 +51,7 @@ function DirectoryPage(tree: DocTree) {
         <h1>Table of Contents</h1>
         <ul>
             {tree.map((e, i) => e.type === "doc" 
-                ? <li key={i}><Link to={e.file.path}>{e.file.title}</Link></li>
+                ? <li key={i}><Link to={stripExtension(e.file.path)}>{e.file.title}</Link></li>
                 : <li key={i}><Link to={e.name}>{e.name}</Link></li>
             )}
         </ul>

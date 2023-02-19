@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { DocTree } from "../common/mmd-docs-types";
+import { DocTree, DocTreeEntry } from "../common/mmd-docs-types";
 import { SearchBox } from "./searchbox";
-import { isHomepage } from "./util";
+import { isHomepage, stripExtension } from "./util";
 
 export const Navigation = (props: { docTree: DocTree }) =>
     <div id="navigation">
@@ -14,21 +14,18 @@ export const Navigation = (props: { docTree: DocTree }) =>
     </div>;
 
 function navigationItems(docTree: DocTree): ReactElement[] {
-    return docTree
-        .filter(item => item.type !== "doc" || !isHomepage(item.file))  // filter out homepage
-        .filter(item => item.type !== "dir" || item.entries.length > 0) // filter out empty directories
-        .map((item, i) => {
-            if (item.type === "doc") {
-                return <li key={i + 1}><NavLink to={item.file.path} className={"navlink"}>{item.file.title}</NavLink></li>
-            }
-            else
-            {
-                return <li key={i + 1}>
-                    <div className="group-heading">{item.name}</div>
-                    <ul>
-                        {[...navigationItems(item.entries)]}
-                    </ul>
-                </li>;
-            }
-        });
+
+    // Order: First individual pages, then child directories
+    const docChildren = docTree.filter(item => item.type === "doc" && !isHomepage(item.file)) as Array<DocTreeEntry & { type: "doc"}>;
+    const dirChildren = docTree.filter(item => item.type === "dir" && item.entries.length > 0) as Array<DocTreeEntry & { type: "dir"}>;
+
+    return [
+        ...docChildren.map((item, i) => <li key={i}><NavLink to={stripExtension(item.file.path)} className={"navlink"}>{item.file.title}</NavLink></li>),
+        ...dirChildren.map((item, j) => <li key={docChildren.length + j}>
+            <div className="group-heading">{item.name}</div>
+            <ul>
+                {[...navigationItems(item.entries)]}
+            </ul>
+        </li>)
+    ];
 }
