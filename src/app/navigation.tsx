@@ -8,7 +8,7 @@ export const Navigation = (props: { docTree: DocTree }) =>
     <div id="navigation">
         <SearchBox docTree={props.docTree} />
         <ul>
-            <li><NavLink to={"/"}>Home</NavLink></li>
+            <li><NavLink className={"navlink"}  to={"/"}>Home</NavLink></li>
             {navigationItems(props.docTree)}
         </ul>
     </div>;
@@ -24,7 +24,7 @@ function navigationItems(docTree: DocTree): ReactElement[] {
             else
             {
                 return <li key={i + 1}>
-                    <div>{item.name}</div>
+                    <div className="group-heading">{item.name}</div>
                     <ul>
                         {[...navigationItems(item.entries)]}
                     </ul>

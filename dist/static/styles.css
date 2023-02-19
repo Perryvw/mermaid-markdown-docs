@@ -27,6 +27,12 @@ html, body {
     padding: 0;
 }
 
+a
+{
+	color: #58a6ff;
+	font-weight: 400;
+}
+
 #root
 {
 	display: flex;
@@ -45,6 +51,51 @@ html, body {
 	border-style: solid;
 	border-color: var(--border-color);
 	border-width: 0px 1px 0px 0px;
+}
+
+#navigation ul
+{
+	margin: 0;
+	padding: 5px 0px 0px 15px;
+	width: 100%;
+}
+
+#navigation li
+{
+	list-style-type: none;
+	margin: 1px 0px;
+}
+
+#navigation .group-heading
+{
+	margin-left: 10px;
+	padding-top: 10px;
+	margin-bottom: -5px;
+	color: #8b8b8b;
+}
+
+.navlink
+{
+	display: inline-block;
+	padding: 5px 10px;
+
+	color: var(--text-color);
+	text-decoration: none;
+	font-weight: 14pt;
+	font-weight: normal;
+}
+
+.navlink:hover
+{
+    background: var(--background-color-light);
+	border-radius: 5px;
+}
+
+.navlink.active
+{
+    background-color: var(--background-color-light);
+	border-radius: 5px;
+	padding: 10px 15px;
 }
 
 #content-container
@@ -77,18 +128,6 @@ html, body {
 {
 	background-color: #f0f0f0;
 	color: black;
-}
-
-#navigation li
-{
-	margin: 5px 0px;
-}
-
-.navlink.active
-{
-    background-color: var(--background-color-light);
-	padding: 5px 10px;
-	border-radius: 5px;
 }
 
 .search-result-header
@@ -145,11 +184,7 @@ a.search-result:hover .search-highlight
 	background-color: #ffffff;
 }
 
-a
-{
-	color: #58a6ff;
-	font-weight: 400;
-}
+
 
 /*!
  * GitHub User Content Stylesheets v1.2.4 (https://github.com/primer/user-content)
@@ -361,7 +396,7 @@ a
 }
 
 .markdown-body code {
-	padding: 0.3em 0.6em;
+	padding: 0.2em 0.5em;
 	background-color: var(--code-inline-bg-color);
 	font-size: var(--code-text-size);
 	overflow-x: auto;
