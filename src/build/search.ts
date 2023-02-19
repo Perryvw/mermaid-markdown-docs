@@ -10,6 +10,8 @@ export function buildSearchIndex(tree: DocTree): string
         this.field('title');
         this.field('text');
 
+        this.pipeline.remove(Lunr.stemmer); // https://github.com/olivernn/lunr.js/issues/210
+
         for (const docFile of iterateDocFiles(tree))
         {
             this.add({ title: docFile.title, text: docFile.markdown, id: docFile.path });

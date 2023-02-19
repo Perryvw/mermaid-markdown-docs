@@ -270,5 +270,5 @@ a.search-result .search-highlight
 
 .markdown-body pre > code {
 	padding: 0;
-	background-color: transparent;
+	display: block;
 }

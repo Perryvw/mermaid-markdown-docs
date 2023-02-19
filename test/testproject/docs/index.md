@@ -3,4 +3,7 @@ title: Homepage
 ---
 # Homepage
 
-Hello, world
+```mermaid
+flowchart LR
+    Hello --> World --> !
+```

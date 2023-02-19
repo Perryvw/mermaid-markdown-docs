@@ -25,7 +25,7 @@ export async function build(options: BuildOptions, esBuildOptions: esbuild.Build
         plugins: [docsContentPlugin(docsDir, searchIndex)]
     }, esBuildOptions));
 
-    context.rebuild();
+    await context.rebuild();
 
     if (path.resolve(outDir) != path.resolve(STATIC_DIR))
     {
