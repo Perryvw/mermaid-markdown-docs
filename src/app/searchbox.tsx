@@ -81,14 +81,14 @@ function matchQueryResult(result: Lunr.Index.Result, searchTerm: string, docsMap
         let exerpt = <></>;
 
         // Try to find a nice exerpt
-        const match = new RegExp(searchTerm, "i").exec(docPage.markdown);
+        const match = new RegExp(searchTerm, "i").exec(docPage.searchtext);
         if (match)
         {
-            const newlineBefore = docPage.markdown.lastIndexOf("\n", match.index);
-            const newlineAfter = docPage.markdown.indexOf("\n", match.index);
+            const newlineBefore = docPage.searchtext.lastIndexOf("\n", match.index);
+            const newlineAfter = docPage.searchtext.indexOf("\n", match.index);
 
-            const textBefore = docPage.markdown.substring(newlineBefore + 1, match.index);
-            const textAfter = docPage.markdown.substring(match.index + searchTerm.length, newlineAfter);
+            const textBefore = docPage.searchtext.substring(newlineBefore + 1, match.index);
+            const textAfter = docPage.searchtext.substring(match.index + searchTerm.length, newlineAfter);
 
             exerpt = <>{textBefore}<span className="search-highlight">{searchTerm}</span>{textAfter}</>;
         }

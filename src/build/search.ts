@@ -14,7 +14,7 @@ export function buildSearchIndex(tree: DocTree): string
 
         for (const docFile of iterateDocFiles(tree))
         {
-            this.add({ title: docFile.title, text: docFile.markdown, id: docFile.path });
+            this.add({ title: docFile.title, text: docFile.searchtext, id: docFile.path });
         }
     });
     

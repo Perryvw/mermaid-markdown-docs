@@ -6,6 +6,8 @@ import markdownItFrontMatter from "markdown-it-front-matter";
 import markdownItMermaidPlugin from "./markdown-it-mermaid-plugin";
 import { parse as parseYaml } from "yaml";
 
+import striptags from "striptags";
+
 import type {DocTree} from "../common/mmd-docs-types";
 import { pageTitle } from "./util";
 
@@ -30,7 +32,8 @@ export async function findDocFiles(docsDirectory: string, pathPrefix: string): P
             const filePath = `${docsDirectory}/${e.name}`;
             const markdown = (await fs.readFile(filePath)).toString()
             const { html, frontMatter } = renderMarkdown(markdown);
-            result.push({type: "doc", file: { path: filePath.substring(pathPrefix.length + 1), title: frontMatter["title"] ?? pageTitle(e.name), markdown, html } });
+            const searchtext = striptags(html);
+            result.push({type: "doc", file: { path: filePath.substring(pathPrefix.length + 1), title: frontMatter["title"] ?? pageTitle(e.name), searchtext, html } });
         }
         else if (e.isDirectory())
         {

@@ -71,7 +71,7 @@ else if (action.type === ActionType.Build)
 }
 else if (action.type === ActionType.Serve)
 {
-    serve({}).then(exitOk, exitErr);
+    serve({});
 }
 else
 {

@@ -1,7 +1,7 @@
 export interface DocFile {
     path: string,
     title: string,
-    markdown: string,
+    searchtext: string,
     html: string
 }
 

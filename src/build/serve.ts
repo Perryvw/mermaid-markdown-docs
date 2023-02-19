@@ -24,11 +24,11 @@ export async function serve(options: BuildOptions) {
     console.log(`Started localhost documentation server at ${host}:${port}`);
 
     const docsDir = options.docsDir ?? DEFAULT_OPTIONS.docsDir;
-    chokidar.watch(docsDir).on("change", filePath => {
+    chokidar.watch(docsDir).on("change", async filePath => {
         if (filePath.endsWith(".md"))
         {
             console.log(`Detected changes in ${filePath}, rebuilding...`);
-            context.rebuild();
+            await context.rebuild();
         }
     })
 }
