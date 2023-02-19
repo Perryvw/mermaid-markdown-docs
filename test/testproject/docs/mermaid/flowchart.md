@@ -8,3 +8,7 @@ flowchart TD
     D --> B
     B ---->|No| E[End]
 ```
+
+This one is loaded from a file:
+
+![diagram from file](./flowchart.mmd)

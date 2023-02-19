@@ -18,10 +18,10 @@ const markdownIt = new MarkdownIt()
         lastFrontMatter = parseYaml(frontMatter);
     });
 
-function renderMarkdown(markdown: string): { html: string, frontMatter: Record<string, string> }
+function renderMarkdown(markdown: string, fileDir: string): { html: string, frontMatter: Record<string, string> }
 {
     lastFrontMatter = {};
-    return { html: markdownIt.render(markdown), frontMatter: lastFrontMatter };
+    return { html: markdownIt.render(markdown, { fileDir }), frontMatter: lastFrontMatter };
 }
 
 export async function findDocFiles(docsDirectory: string, pathPrefix: string): Promise<DocTree> {
@@ -31,7 +31,7 @@ export async function findDocFiles(docsDirectory: string, pathPrefix: string): P
         {
             const filePath = `${docsDirectory}/${e.name}`;
             const markdown = (await fs.readFile(filePath)).toString()
-            const { html, frontMatter } = renderMarkdown(markdown);
+            const { html, frontMatter } = renderMarkdown(markdown, docsDirectory);
             const searchtext = striptags(html);
             result.push({type: "doc", file: { path: filePath.substring(pathPrefix.length + 1), title: frontMatter["title"] ?? pageTitle(e.name), searchtext, html } });
         }
