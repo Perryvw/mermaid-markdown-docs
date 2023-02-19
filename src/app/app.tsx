@@ -14,6 +14,9 @@ import { iterateDocFiles } from "../build/util";
 const titles = createTitleMap(docs.content);
 
 const App = (props: { doctree: DocTree }) => {
+
+    mermaid.initialize({ theme: "dark" });
+
     let curLoc = useLocation();
     useEffect(() => {
         document.title = titles[curLoc.pathname.substring(1)] ?? curLoc.pathname;
@@ -68,7 +71,9 @@ function HomePage(tree: DocTree) {
 }
 
 function createTitleMap(tree: DocTree): Record<string, string> {
-    const titles: Record<string, string> = {};
+    const titles: Record<string, string> = {
+        [""]: "Homepage"
+    };
 
     for (const docFile of iterateDocFiles(tree))
     {

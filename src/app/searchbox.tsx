@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import type { DocFile, DocTree } from "../common/mmd-docs-types";
-import { SIDEBAR_WIDTH } from "./styles";
 import Lunr from "lunr";
 
 import { searchIndexJson } from "mmd-search-index";
@@ -15,7 +14,7 @@ const searchIndex = Lunr.Index.load(searchIndexJson);
 const SearchResult = (props: { result: SearchResult, onClick?: React.MouseEventHandler<HTMLAnchorElement> }) =>
     <Link className="search-result" to={props.result.link} onClick={props.onClick}>
         <h3>{props.result.title}</h3>
-        <p>{props.result.exerpt}</p>
+        <p className="exerpt">{props.result.exerpt}</p>
     </Link>;
 
 export function SearchBox(props: { docTree: DocTree }) {
@@ -57,18 +56,17 @@ export function SearchBox(props: { docTree: DocTree }) {
         setSearchResults([]);
     }
 
+    const searchResultHeader = <div className="search-result-header">Search results:</div>
+    const searchResultElements = searchResults.map((r, i) => <SearchResult key={i} result={r} onClick={onSearchResultClick} />);
+
     return <>
-        <input type="text" 
-            placeholder="Search..."
+        <input type="text" id="search-input"
+            placeholder="Type to search..."
             value={inputValue}
             onChange={handleChange}
-
-            style={{
-                margin: 20,
-                width: SIDEBAR_WIDTH -  40
-            }}
         />
-        {searchResults.map((r, i) => <SearchResult key={i} result={r} onClick={onSearchResultClick} />)}
+        {searchResultElements.length > 0 ? searchResultHeader : <></>}
+        {searchResultElements}
     </>;
 }
 
@@ -91,6 +89,13 @@ function matchQueryResult(result: Lunr.Index.Result, searchTerm: string, docsMap
             const textAfter = docPage.searchtext.substring(match.index + searchTerm.length, newlineAfter);
 
             exerpt = <>{textBefore}<span className="search-highlight">{searchTerm}</span>{textAfter}</>;
+        }
+        else
+        {
+            // Just take the first sentence
+            const firstNewLine = docPage.searchtext.indexOf("\n", 1);
+            console.log(firstNewLine, docPage.searchtext);
+            exerpt = <>{docPage.searchtext.substring(0, firstNewLine)}</>;
         }
 
         return { title: docPage.title, exerpt, link: docPage.path};

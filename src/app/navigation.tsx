@@ -2,13 +2,10 @@ import React, { ReactElement } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { DocTree } from "../common/mmd-docs-types";
 import { SearchBox } from "./searchbox";
-import { SIDEBAR_WIDTH } from "./styles";
 import { isHomepage } from "./util";
 
 export const Navigation = (props: { docTree: DocTree }) =>
-    <div id="navigation" style={{
-        width: SIDEBAR_WIDTH
-    }}>
+    <div id="navigation">
         <SearchBox docTree={props.docTree} />
         <ul>
             <li><NavLink to={"/"}>Home</NavLink></li>
