@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { DocTree, DocTreeEntry } from "../common/mmd-docs-types";
 import { SearchBox } from "./searchbox";
 import { isHomepage, stripExtension } from "./util";

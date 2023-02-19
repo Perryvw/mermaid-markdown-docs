@@ -77,7 +77,7 @@ function createTitleMap(tree: DocTree): Record<string, string> {
 
     for (const docFile of iterateDocFiles(tree))
     {
-        titles[docFile.path] = docFile.title;
+        titles[stripExtension(docFile.path)] = docFile.title;
     }
 
     return titles;
