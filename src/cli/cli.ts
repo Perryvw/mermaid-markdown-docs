@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { build } from "../build/build";
+import { tryReadConfigurationFile } from "../build/options";
 import { serve } from "../build/serve";
 
 enum ActionType {
@@ -67,11 +68,13 @@ mermaid-markdown-docs serve [options]       Start a server and file watcher for 
 }
 else if (action.type === ActionType.Build)
 {
-    build({}).then(exitOk, exitErr);
+    const config = tryReadConfigurationFile();
+    build(config).then(exitOk, exitErr);
 }
 else if (action.type === ActionType.Serve)
 {
-    serve({});
+    const config = tryReadConfigurationFile();
+    serve(config);
 }
 else
 {
