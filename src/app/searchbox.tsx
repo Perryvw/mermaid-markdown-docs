@@ -5,6 +5,7 @@ import Lunr from "lunr";
 import { searchIndexJson } from "mmd-search-index";
 import { Link } from "react-router-dom";
 import { iterateDocFiles } from "../build/util";
+import { stripExtension } from "./util";
 
 type SearchResult = { title: string, exerpt: React.ReactElement, link: string };
 
@@ -98,12 +99,12 @@ function matchQueryResult(result: Lunr.Index.Result, searchTerm: string, docsMap
             exerpt = <>{docPage.searchtext.substring(0, firstNewLine)}</>;
         }
 
-        return { title: docPage.title, exerpt, link: docPage.path};
+        return { title: docPage.title, exerpt, link: stripExtension(docPage.path)};
     }
     else
     {
         // Fallback, try to do our best
-        return { title: result.ref, exerpt: <></>, link: result.ref};
+        return { title: result.ref, exerpt: <></>, link: stripExtension(result.ref)};
     }
 }
 
