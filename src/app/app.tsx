@@ -53,12 +53,16 @@ function Pages(tree: DocTree): RouteObject[] {
 function DirectoryPage(tree: DocTree) {
     return <>
         <h1>Table of Contents</h1>
-        <ul>
-            {tree.map((e, i) => e.type === "doc" 
-                ? <li key={i}><Link to={stripExtension(e.file.path)}>{e.file.title}</Link></li>
-                : <li key={i}><Link to={e.name}>{e.name}</Link></li>
-            )}
-        </ul>
+        {tree.length > 0
+            ? <ul>
+                {tree.map((e, i) => e.type === "doc" 
+                    ? <li key={i}><Link to={stripExtension(e.file.path)}>{e.file.title}</Link></li>
+                    : <li key={i}><Link to={e.name}>{e.name}</Link></li>
+                )}
+            </ul>
+            : <p>No documentation files could be found :(</p>
+        }
+
     </>;
 }
 

@@ -22,7 +22,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "dev": "tsc && concurrently \"tsc --watch\" \"npm --prefix test/testproject run start\""
+    "build:docs": "node dist/cli/cli.js build",
+    "dev": "tsc && concurrently \"tsc --watch\" \"node dist/cli/cli.js serve\""
   },
   "bin": {
     "mermaid-markdown-docs": "./dist/cli/cli.js"

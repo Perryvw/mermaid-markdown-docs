@@ -1,0 +1,4 @@
+---
+title: Mermaid Diagrams
+---
+boo
