@@ -25,7 +25,7 @@ export async function serve(options: BuildOptions) {
 
     const docsDir = options.docsDir ?? DEFAULT_OPTIONS.docsDir;
     chokidar.watch(docsDir).on("change", async filePath => {
-        if (filePath.endsWith(".md"))
+        if (filePath.endsWith(".md") || filePath.endsWith(".mmd"))
         {
             console.log(`Detected changes in ${filePath}, rebuilding...`);
             await context.rebuild();

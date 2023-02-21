@@ -34,7 +34,7 @@ export async function findDocFiles(docsDirectory: string, pathPrefix: string): P
             const markdown = (await fs.readFile(filePath)).toString()
             const { html, frontMatter } = renderMarkdown(markdown, docsDirectory);
             const searchtext = striptags(html);
-            result.push({type: "doc", file: { path: filePath.substring(pathPrefix.length + 1), title: frontMatter["title"] ?? pageTitle(e.name), searchtext, html } });
+            result.push({type: "doc", file: { path: filePath.substring(pathPrefix.length + 1), title: frontMatter?.["title"] ?? pageTitle(e.name), searchtext, html } });
         }
         else if (e.isDirectory())
         {
