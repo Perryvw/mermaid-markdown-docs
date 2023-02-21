@@ -8,8 +8,9 @@ import { parse as parseYaml } from "yaml";
 
 import striptags from "striptags";
 
-import type {DocTree} from "../common/mmd-docs-types";
+import type {DocTree, SiteOptions} from "../common/mmd-docs-types";
 import { pageTitle } from "./util";
+import { tryReadConfigurationFile } from "./options";
 
 let lastFrontMatter = {};
 const markdownIt = new MarkdownIt()
@@ -56,8 +57,14 @@ export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild
 
             build.onLoad({ filter: /.*/, namespace: 'mmd-ns' }, async () => {
                 const docsTree = await findDocFiles(docsDir, docsDir);
+                const options = tryReadConfigurationFile();
+                const siteOptions: SiteOptions = {
+                    title: options.title,
+                    repository: options.repository
+                }
                 return {
-                    contents: `export const content = ${JSON.stringify(docsTree)};`,
+                    contents: `export const content = ${JSON.stringify(docsTree)};`
+                        + `export const options = ${JSON.stringify(siteOptions)};`,
                     loader: 'ts',
                 };
             });

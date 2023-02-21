@@ -7,3 +7,8 @@ export interface DocFile {
 
 export type DocTreeEntry = { type: "doc", file: DocFile } | { type: "dir", name: string, entries: DocTree };
 export type DocTree = DocTreeEntry[];
+
+export interface SiteOptions {
+    title?: string;
+    repository?: string;
+}

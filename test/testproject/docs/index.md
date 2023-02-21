@@ -1,7 +1,6 @@
 ---
 title: Homepage
 ---
-# Homepage
 
 ```mermaid
 flowchart LR

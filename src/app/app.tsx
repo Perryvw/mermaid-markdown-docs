@@ -3,17 +3,18 @@ import { createRoot } from "react-dom/client";
 import { createHashRouter, Link, RouteObject, RouterProvider, useLocation } from "react-router-dom";
 
 import * as docs from "mmd-docs";
-import { DocFile, DocTree, DocTreeEntry } from "../common/mmd-docs-types";
+import { DocFile, DocTree, DocTreeEntry, SiteOptions } from "../common/mmd-docs-types";
 
 import { Navigation } from "./navigation";
 import { DocPage } from "./docpage";
 import { isHomepage, stripExtension } from "./util";
 import mermaid from "mermaid";
 import { iterateDocFiles } from "../build/util";
+import { TopBar } from "./topbar";
 
 const titles = createTitleMap(docs.content);
 
-const App = (props: { doctree: DocTree }) => {
+const App = (props: { doctree: DocTree, options: SiteOptions }) => {
 
     mermaid.initialize({ theme: "dark" });
 
@@ -25,8 +26,11 @@ const App = (props: { doctree: DocTree }) => {
     }, [curLoc]);
 
     return <>
-        <Navigation docTree={props.doctree} />
-        <DocPage />
+        <TopBar options={props.options} />
+        <div id="docs">
+            <Navigation docTree={props.doctree} />
+            <DocPage />
+        </div>
     </>;
 }
 
@@ -62,7 +66,7 @@ function HomePage(tree: DocTree) {
     const homepage = tree.find(e => e.type === "doc" && isHomepage(e.file)) as { file: DocFile };
     if (homepage)
     {
-        return <div dangerouslySetInnerHTML={{__html: homepage.file.html}} />;
+        return Page(homepage.file).element;
     }
     else
     {
@@ -86,7 +90,7 @@ function createTitleMap(tree: DocTree): Record<string, string> {
 const router = createHashRouter([
     {
         path: "/",
-        element: <App doctree={docs.content} />,
+        element: <App doctree={docs.content} options={docs.options} />,
         children: [
             { index: true, element: HomePage(docs.content) },
             ...Pages(docs.content),

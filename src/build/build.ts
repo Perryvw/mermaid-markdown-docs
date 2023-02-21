@@ -36,7 +36,8 @@ export async function build(options: BuildOptions, esBuildOptions: esbuild.Build
 
         const staticFilesToCopy = [
             "index.html",
-            "styles.css"
+            "styles.css",
+            "github-mark-white.svg"
         ]
 
         for (const fileName of staticFilesToCopy)
