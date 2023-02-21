@@ -1,9 +1,0 @@
-{
-    "scripts": {
-        "build": "npx mermaid-markdown-docs build",
-        "start": "npx mermaid-markdown-docs serve"
-    },
-    "devDependencies": {
-        "mermaid-markdown-docs": "file:../.."
-    }
-}

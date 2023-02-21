@@ -2,6 +2,8 @@
 
 Mermaid-Markdown-Docs is a framework to easily create documentation websites from markdown files, with minimal setup.
 
+Live demo: [Mermaid-Markdown-Docs documentation](https://perryvw.github.io/mermaid-markdown-docs/)
+
 ## Built-in features:
 
 * Create a documentation website entirely from markdown files
@@ -19,35 +21,6 @@ The package `mermaid-markdown-docs` can be installed from npm using the followin
 npm i -D mermaid-markdown-docs
 ```
 
-# Getting started
-After installing the package, create a directory called `docs`. Create your first markdown file `my-first-page.md` in it:
-````
----
-title: My First Page
----
+# Documentation
 
-My first page with my first mermaid diagram:
-
-```mermaid
-flowchart LR
-    Hello --> World --> !
-```
-````
-
-Run `mermaid-markdown-docs serve` to start the development server:
-```
-npx mermaid-markdown-docs serve
-```
-
-Once you are happy with the output run `mermaid-markdown-docs build` to create a final build of website in the `out` directory:
-```
-npx mermaid-markdown-docs build
-```
-
-# Tips & Tricks
-
-### Homepage:
-You can set the contents of the homepage by creating `docs/index.md`
-
-### Separate mermaid files:
-You can have your mermaid diagrams in separate files instead of inline in the markdown. Simply put your diagram in its own file: `my-diagram.mmd` and then reference it from your markdown as if it were an image: `![My diagram](./my-diagram.mmd)`.
+Find our documentation - generated using mermaid-markdown-docs from this repository - here: [Mermaid-Markdown-Docs documentation](https://perryvw.github.io/mermaid-markdown-docs/)

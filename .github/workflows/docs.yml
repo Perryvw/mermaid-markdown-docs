@@ -1,4 +1,4 @@
-name: Deploy documentation
+name: Deploy
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy documentation
     runs-on: ubuntu-latest
 
     permissions:
