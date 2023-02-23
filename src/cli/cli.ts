@@ -40,17 +40,6 @@ function validateCliArguments(args: string[]): CliAction {
     }
 }
 
-function exitOk()
-{
-    process.exit(0);
-}
-
-function exitErr(err: Error)
-{
-    console.error("An error occurred: ", err);
-    process.exit(1);
-}
-
 const action = validateCliArguments(process.argv);
 
 if (action.type === ActionType.Help)
@@ -69,7 +58,8 @@ mermaid-markdown-docs serve [options]       Start a server and file watcher for 
 else if (action.type === ActionType.Build)
 {
     const config = tryReadConfigurationFile();
-    build(config).then(exitOk, exitErr);
+    const p = build(config);
+    p.then(ctx => ctx.dispose());
 }
 else if (action.type === ActionType.Serve)
 {
