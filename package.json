@@ -31,6 +31,7 @@
   "dependencies": {
     "chokidar": "^3.5.3",
     "esbuild": "^0.17.5",
+    "highlight.js": "^11.7.0",
     "lunr": "^2.3.9",
     "markdown-it": "^13.0.1",
     "markdown-it-front-matter": "^0.2.3",

@@ -6,8 +6,8 @@ title: Getting Started
 
 The package `mermaid-markdown-docs` can be installed from npm using the following command:
 
-```
-npm i -D mermaid-markdown-docs
+```shell
+$ npm i -D mermaid-markdown-docs
 ```
 
 # Getting started
@@ -30,13 +30,13 @@ flowchart LR
 The built-in development server lets you see your documentation website locally. It listens to changes in your files and automatically reloads when you change your documentation.
 
 Run `mermaid-markdown-docs serve` to start the development server:
-```
-npx mermaid-markdown-docs serve
+```shell
+$ npx mermaid-markdown-docs serve
 ```
 
 ## Building final output
 
 Once you are happy with the output run `mermaid-markdown-docs build` to create a final build of website in the `out` directory:
-```
-npx mermaid-markdown-docs build
+```shell
+$ npx mermaid-markdown-docs build
 ```

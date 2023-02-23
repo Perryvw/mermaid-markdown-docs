@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createHashRouter, Link, RouteObject, RouterProvider, useLocation } from "react-router-dom";
 
 import * as docs from "mmd-docs";
-import { DocFile, DocTree, DocTreeEntry, SiteOptions } from "../common/mmd-docs-types";
+import { DocFile, DocTree, SiteOptions } from "../common/mmd-docs-types";
 
 import { Navigation } from "./navigation";
 import { DocPage } from "./docpage";
@@ -11,6 +11,7 @@ import { isHomepage, stripExtension } from "./util";
 import mermaid from "mermaid";
 import { iterateDocFiles } from "../build/util";
 import { TopBar } from "./topbar";
+import hljs from "highlight.js";
 
 const titles = createTitleMap(docs.content);
 
@@ -23,6 +24,7 @@ const App = (props: { doctree: DocTree, options: SiteOptions }) => {
         document.title = titles[curLoc.pathname.substring(1)] ?? curLoc.pathname;
 
         mermaid.contentLoaded();
+        hljs.highlightAll();
     }, [curLoc]);
 
     return <>

@@ -8,7 +8,7 @@ title: Mermaid Diagrams
 
 Simply add a codeblock in your Markdown with the `mermaid` type. This codeblock will then be replaced with a rendered diagram in the generated website:
 
-````
+````md
 ```mermaid
 flowchart
     inl[Inline mermaid code in markdown] -->|Website build| r[Rendered Mermaid diagram!]

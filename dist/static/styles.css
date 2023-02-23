@@ -6,9 +6,9 @@
 
 	--sidebar-width: 300px;
 
-	--heading-color: #f0f0f0;
+	--heading-color: #e0e0e0;
 
-	--text-color: #f0f0f0;
+	--text-color: #e0e0e0;
 
 	--search-result-bg-color: #bcdcff;
 
@@ -449,7 +449,7 @@ a.search-result:hover .search-highlight
 }
 
 .markdown-body code {
-	padding: 0.2em 0.5em;
+	padding: 0.2em 0.3em;
 	background-color: var(--code-inline-bg-color);
 	font-size: var(--code-text-size);
 	overflow-x: auto;

@@ -18,11 +18,12 @@ export async function build(options: BuildOptions, esBuildOptions: esbuild.Build
     const docTree = await findDocFiles(docsDir, docsDir);
     const searchIndex = buildSearchIndex(docTree);
 
-    let context = await esbuild.context(Object.assign({
+    let context = await esbuild.context(Object.assign(<esbuild.BuildOptions>{
         outfile: path.join(outDir, "bundle.js"),
         entryPoints: [path.join(__dirname, "../app/app.js")],
         bundle: true,
-        plugins: [docsContentPlugin(docsDir, searchIndex)]
+        plugins: [docsContentPlugin(docsDir, searchIndex)],
+        minify: true,
     }, esBuildOptions));
 
     await context.rebuild();

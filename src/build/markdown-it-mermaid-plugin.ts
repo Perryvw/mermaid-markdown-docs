@@ -10,6 +10,12 @@ export default function(md: MarkdownIt) {
         {
             return `<pre class="mermaid">${token.content}</pre>`;
         }
+        else if (token.tag === "code" && token.info.length == 0)
+        {
+            // Set codeblocks without language set to be plaintext so they dont get random highlighting assigned
+            token.info = "plaintext";
+            return defaultRenderer(tokens, idx, opts, env, self);
+        }
         else
         {
             return defaultRenderer(tokens, idx, opts, env, self);
