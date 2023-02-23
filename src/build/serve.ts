@@ -13,7 +13,22 @@ export async function serve(options: BuildOptions) {
     const context = await build({ outDir: STATIC_DIR }, { 
         sourcemap: true,
         banner: {
-            js: `new EventSource("/esbuild").addEventListener("change", () => location.reload());`
+            js: `
+            document.addEventListener("DOMContentLoaded", function (event) {
+                var scrollpos = sessionStorage.getItem('scrollpos');
+                if (scrollpos) {
+                    setTimeout(() => {
+                        window.scrollTo(0, scrollpos);
+                        sessionStorage.removeItem('scrollpos');
+                    }, 0);
+                }
+            });
+        
+            new EventSource("/esbuild").addEventListener("change", () => {
+                sessionStorage.setItem('scrollpos', window.scrollY);
+                location.reload();
+            });
+            `
         },
     });
 
@@ -30,5 +45,5 @@ export async function serve(options: BuildOptions) {
             console.log(`Detected changes in ${filePath}, rebuilding...`);
             await context.rebuild();
         }
-    })
+    });
 }
