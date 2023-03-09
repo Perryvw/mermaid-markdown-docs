@@ -27,7 +27,7 @@ const App = (props: { doctree: DocTree, options: SiteOptions }) => {
             const element = document.getElementById(curLoc.hash.substring(1));
             if (element)
             {
-                setTimeout(() => element.scrollIntoView(), 0); 
+                setTimeout(() => element.scrollIntoView(), 200); 
             }
         }
     }, []);
