@@ -3,6 +3,7 @@ import * as fs from "fs/promises";
 
 import MarkdownIt from "markdown-it";
 import markdownItFrontMatter from "markdown-it-front-matter";
+import markdownItAnchorPlugin from "./markdown-it-anchor-plugin";
 import markdownItMermaidPlugin from "./markdown-it-mermaid-plugin";
 import { parse as parseYaml } from "yaml";
 
@@ -11,18 +12,20 @@ import striptags from "striptags";
 import type {DocTree, SiteOptions} from "../common/mmd-docs-types";
 import { pageTitle } from "./util";
 import { tryReadConfigurationFile } from "./options";
+import { stripExtension } from "../app/util";
 
 let lastFrontMatter = {};
 const markdownIt = new MarkdownIt()
+    .use(markdownItAnchorPlugin)
     .use(markdownItMermaidPlugin)
     .use(markdownItFrontMatter, frontMatter => {
         lastFrontMatter = parseYaml(frontMatter);
     });
 
-function renderMarkdown(markdown: string, fileDir: string): { html: string, frontMatter: Record<string, string> }
+function renderMarkdown(markdown: string, fileDir: string, route: string): { html: string, frontMatter: Record<string, string> }
 {
     lastFrontMatter = {};
-    return { html: markdownIt.render(markdown, { fileDir }), frontMatter: lastFrontMatter };
+    return { html: markdownIt.render(markdown, { fileDir, route }), frontMatter: lastFrontMatter };
 }
 
 export async function findDocFiles(docsDirectory: string, pathPrefix: string): Promise<DocTree> {
@@ -32,7 +35,7 @@ export async function findDocFiles(docsDirectory: string, pathPrefix: string): P
         {
             const filePath = `${docsDirectory}/${e.name}`;
             const markdown = (await fs.readFile(filePath)).toString()
-            const { html, frontMatter } = renderMarkdown(markdown, docsDirectory);
+            const { html, frontMatter } = renderMarkdown(markdown, docsDirectory, stripExtension(filePath.substring(pathPrefix.length + 1)));
             const searchtext = striptags(html);
             result.push({type: "doc", file: { path: filePath.substring(pathPrefix.length + 1), title: frontMatter?.["title"] ?? pageTitle(e.name), searchtext, html } });
         }

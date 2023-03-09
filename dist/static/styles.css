@@ -9,6 +9,7 @@
 	--heading-color: #e0e0e0;
 
 	--text-color: #e0e0e0;
+	--link-color: #58a6ff;
 
 	--search-result-bg-color: #bcdcff;
 
@@ -29,7 +30,7 @@ html, body {
 
 a
 {
-	color: #58a6ff;
+	color: var(--link-color);
 	font-weight: 400;
 }
 
@@ -163,6 +164,7 @@ a
 	max-width: 800px;
 	margin: 10px 10px;
 	padding-top: 15px;
+	padding-left: 20px;
 }
 
 #search-input
@@ -237,7 +239,29 @@ a.search-result:hover .search-highlight
 	background-color: #ffffff;
 }
 
+a.section-anchor-h1,
+a.section-anchor-h2,
+a.section-anchor-h3
+{
+	float: left;
+	margin-left: -22px;
+	margin-top: 15px;
+	text-decoration: none;
+	font-size: 20px;
+	font-weight: bold;
+	color: var(--border-color);
+}
 
+a.section-anchor-h1 { margin-top: 20px; }
+a.section-anchor-h2 { margin-top: 15px; }
+a.section-anchor-h3 { margin-top: 15px; }
+
+a.section-anchor-h1:hover,
+a.section-anchor-h2:hover,
+a.section-anchor-h3:hover
+{
+	color: var(--link-color);
+}
 
 /*!
  * GitHub User Content Stylesheets v1.2.4 (https://github.com/primer/user-content)
@@ -293,6 +317,7 @@ a.search-result:hover .search-highlight
 	line-height: 1.4;
 	font-weight: bold;
 	color: var(--heading-color);
+	scroll-margin-top: 0.4em;
 }
 
 .markdown-body h1 code,
