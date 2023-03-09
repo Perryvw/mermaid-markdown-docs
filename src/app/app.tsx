@@ -22,11 +22,9 @@ const App = (props: { doctree: DocTree, options: SiteOptions }) => {
     let curLoc = useLocation();
     // on initial load
     useEffect(() => {
-        console.log(curLoc.hash)
         if (curLoc.hash.length > 1)
         {
             const element = document.getElementById(curLoc.hash.substring(1));
-            console.log(element);
             if (element)
             {
                 setTimeout(() => element.scrollIntoView(), 0); 
