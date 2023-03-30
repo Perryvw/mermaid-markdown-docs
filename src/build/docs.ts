@@ -1,31 +1,49 @@
 import * as esbuild from "esbuild";
 import * as fs from "fs/promises";
+import * as path from "path";
 
 import MarkdownIt from "markdown-it";
 import markdownItFrontMatter from "markdown-it-front-matter";
 import markdownItAnchorPlugin from "./markdown-it-anchor-plugin";
 import markdownItMermaidPlugin from "./markdown-it-mermaid-plugin";
+import markdownItImagePlugin from "./markdown-it-image-plugin";
 import { parse as parseYaml } from "yaml";
 
 import striptags from "striptags";
 
 import type {DocTree, SiteOptions} from "../common/mmd-docs-types";
-import { pageTitle } from "./util";
+import { iterateDocFiles, pageTitle } from "./util";
 import { tryReadConfigurationFile } from "./options";
 import { stripExtension } from "../app/util";
 
 let lastFrontMatter = {};
+let images: string[] = [];
+
 const markdownIt = new MarkdownIt()
     .use(markdownItAnchorPlugin)
+    .use(markdownItImagePlugin, (image: string) => {
+        images.push(image);
+    })
     .use(markdownItMermaidPlugin)
     .use(markdownItFrontMatter, frontMatter => {
         lastFrontMatter = parseYaml(frontMatter);
     });
 
-function renderMarkdown(markdown: string, fileDir: string, route: string): { html: string, frontMatter: Record<string, string> }
+interface MarkdownResult {
+    html: string,
+    frontMatter: Record<string, string>,
+    images: string[]
+}
+
+function renderMarkdown(markdown: string, fileDir: string, route: string): MarkdownResult
 {
+    images = [];
     lastFrontMatter = {};
-    return { html: markdownIt.render(markdown, { fileDir, route }), frontMatter: lastFrontMatter };
+
+    const html = markdownIt.render(markdown, { fileDir, route });
+    const imagePaths = images.map(i => path.join(fileDir, i));
+
+    return { html, frontMatter: lastFrontMatter, images: imagePaths };
 }
 
 export async function findDocFiles(docsDirectory: string, pathPrefix: string): Promise<DocTree> {
@@ -35,9 +53,18 @@ export async function findDocFiles(docsDirectory: string, pathPrefix: string): P
         {
             const filePath = `${docsDirectory}/${e.name}`;
             const markdown = (await fs.readFile(filePath)).toString()
-            const { html, frontMatter } = renderMarkdown(markdown, docsDirectory, stripExtension(filePath.substring(pathPrefix.length + 1)));
+            const { html, frontMatter, images } = renderMarkdown(markdown, docsDirectory, stripExtension(filePath.substring(pathPrefix.length + 1)));
             const searchtext = striptags(html);
-            result.push({type: "doc", file: { path: filePath.substring(pathPrefix.length + 1), title: frontMatter?.["title"] ?? pageTitle(e.name), searchtext, html } });
+            result.push({
+                type: "doc",
+                file: {
+                    path: filePath.substring(pathPrefix.length + 1), 
+                    title: frontMatter?.["title"] ?? pageTitle(e.name),
+                    searchtext,
+                    html,
+                    fileDependencies: images
+                },               
+            });
         }
         else if (e.isDirectory())
         {
@@ -49,6 +76,8 @@ export async function findDocFiles(docsDirectory: string, pathPrefix: string): P
 
 export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild.Plugin
 {
+    let additionalOutputFiles: string[] = [];
+
     return {
         name: "mmd-content-plugin",
         async setup(build) {
@@ -65,6 +94,11 @@ export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild
                     title: options.title,
                     repository: options.repository
                 }
+
+                for (const f of iterateDocFiles(docsTree)) {
+                    additionalOutputFiles.push(...f.fileDependencies);
+                }
+
                 return {
                     contents: `export const content = ${JSON.stringify(docsTree)};`
                         + `export const options = ${JSON.stringify(siteOptions)};`,
@@ -83,6 +117,26 @@ export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild
                     contents: `export const searchIndexJson = ${searchIndex};`,
                     loader: 'ts',
                 };
+            });
+
+            build.onStart(() => {
+                additionalOutputFiles = [];
+            });
+
+            build.onEnd(async () => {
+                await Promise.all(additionalOutputFiles.map(f => {
+                    const fileName = path.basename(f);
+
+                    let outDir = process.cwd();
+                    if (build.initialOptions.outdir) {
+                        outDir = build.initialOptions.outdir;
+                    }                
+                    else if (build.initialOptions.outfile) {
+                        outDir = path.dirname(build.initialOptions.outfile);
+                    }
+
+                    return fs.copyFile(f, path.join(outDir, fileName));
+                }))
             });
         }
     };
