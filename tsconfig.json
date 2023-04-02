@@ -1,20 +1,20 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "outDir": "dist",
+    "compilerOptions": {
+        "target": "esnext",
+        "outDir": "dist",
 
-    "jsx": "react",
+        "jsx": "react",
 
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "rootDir": "src",
-    "resolveJsonModule": true,
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "rootDir": "src",
+        "resolveJsonModule": true,
 
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
 
-    "skipLibCheck": true,
-  },
-  "include": ["src/**/*.tsx", "src/**/*.ts"]
+        "skipLibCheck": true
+    },
+    "include": ["src/**/*.tsx", "src/**/*.ts"]
 }

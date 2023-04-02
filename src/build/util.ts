@@ -6,25 +6,18 @@ export function nicelyCapitalize(str: string): string {
 }
 
 export function pageTitle(path: string): string {
-    if (path.includes("."))
-    {
+    if (path.includes(".")) {
         return nicelyCapitalize(path.substring(0, path.lastIndexOf(".")));
-    }
-    else
-    {
+    } else {
         return nicelyCapitalize(path);
     }
 }
 
 export function* iterateDocFiles(tree: DocTree): Iterable<DocFile> {
-    for (const item of tree)
-    {
-        if (item.type === "doc")
-        {
+    for (const item of tree) {
+        if (item.type === "doc") {
             yield item.file;
-        }
-        else
-        {
+        } else {
             yield* iterateDocFiles(item.entries);
         }
     }

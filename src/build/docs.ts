@@ -11,7 +11,7 @@ import { parse as parseYaml } from "yaml";
 
 import striptags from "striptags";
 
-import type {DocTree, SiteOptions} from "../common/mmd-docs-types";
+import type { DocTree, SiteOptions } from "../common/mmd-docs-types";
 import { iterateDocFiles, pageTitle } from "./util";
 import { tryReadConfigurationFile } from "./options";
 import { stripExtension } from "../app/util";
@@ -25,23 +25,22 @@ const markdownIt = new MarkdownIt()
         images.push(image);
     })
     .use(markdownItMermaidPlugin)
-    .use(markdownItFrontMatter, frontMatter => {
+    .use(markdownItFrontMatter, (frontMatter) => {
         lastFrontMatter = parseYaml(frontMatter);
     });
 
 interface MarkdownResult {
-    html: string,
-    frontMatter: Record<string, string>,
-    images: string[]
+    html: string;
+    frontMatter: Record<string, string>;
+    images: string[];
 }
 
-function renderMarkdown(markdown: string, fileDir: string, route: string): MarkdownResult
-{
+function renderMarkdown(markdown: string, fileDir: string, route: string): MarkdownResult {
     images = [];
     lastFrontMatter = {};
 
     const html = markdownIt.render(markdown, { fileDir, route });
-    const imagePaths = images.map(i => path.join(fileDir, i));
+    const imagePaths = images.map((i) => path.join(fileDir, i));
 
     return { html, frontMatter: lastFrontMatter, images: imagePaths };
 }
@@ -49,73 +48,78 @@ function renderMarkdown(markdown: string, fileDir: string, route: string): Markd
 export async function findDocFiles(docsDirectory: string, pathPrefix: string): Promise<DocTree> {
     const result: DocTree = [];
     for await (const e of await fs.opendir(docsDirectory)) {
-        if (e.isFile() && e.name.endsWith(".md"))
-        {
+        if (e.isFile() && e.name.endsWith(".md")) {
             const filePath = `${docsDirectory}/${e.name}`;
-            const markdown = (await fs.readFile(filePath)).toString()
-            const { html, frontMatter, images } = renderMarkdown(markdown, docsDirectory, stripExtension(filePath.substring(pathPrefix.length + 1)));
+            const markdown = (await fs.readFile(filePath)).toString();
+            const { html, frontMatter, images } = renderMarkdown(
+                markdown,
+                docsDirectory,
+                stripExtension(filePath.substring(pathPrefix.length + 1))
+            );
             const searchtext = striptags(html);
             result.push({
                 type: "doc",
                 file: {
-                    path: filePath.substring(pathPrefix.length + 1), 
+                    path: filePath.substring(pathPrefix.length + 1),
                     title: frontMatter?.["title"] ?? pageTitle(e.name),
                     searchtext,
                     html,
-                    fileDependencies: images
-                },               
+                    fileDependencies: images,
+                },
             });
-        }
-        else if (e.isDirectory())
-        {
-            result.push({ type: "dir", name: pageTitle(e.name), entries: await findDocFiles(`${docsDirectory}/${e.name}`, pathPrefix)});
+        } else if (e.isDirectory()) {
+            result.push({
+                type: "dir",
+                name: pageTitle(e.name),
+                entries: await findDocFiles(`${docsDirectory}/${e.name}`, pathPrefix),
+            });
         }
     }
     return result;
 }
 
-export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild.Plugin
-{
+export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild.Plugin {
     let additionalOutputFiles: string[] = [];
 
     return {
         name: "mmd-content-plugin",
         async setup(build) {
             // Docs bundle
-            build.onResolve({ filter: /^mmd-docs$/ }, args => ({
+            build.onResolve({ filter: /^mmd-docs$/ }, (args) => ({
                 path: args.path,
-                namespace: 'mmd-ns',
+                namespace: "mmd-ns",
             }));
 
-            build.onLoad({ filter: /.*/, namespace: 'mmd-ns' }, async () => {
+            build.onLoad({ filter: /.*/, namespace: "mmd-ns" }, async () => {
                 const docsTree = await findDocFiles(docsDir, docsDir);
                 const options = tryReadConfigurationFile();
                 const siteOptions: SiteOptions = {
                     title: options.title,
-                    repository: options.repository
-                }
+                    repository: options.repository,
+                };
 
                 for (const f of iterateDocFiles(docsTree)) {
                     additionalOutputFiles.push(...f.fileDependencies);
                 }
 
                 return {
-                    contents: `export const content = ${JSON.stringify(docsTree)};`
-                        + `export const options = ${JSON.stringify(siteOptions)};`,
-                    loader: 'ts',
+                    contents:
+                        `export const content = ${JSON.stringify(docsTree)};` +
+                        `export const options = ${JSON.stringify(siteOptions)};`,
+                    loader: "ts",
                 };
             });
 
             // Search index
-            build.onResolve({ filter: /^mmd-search-index$/ }, args => ({
+            build.onResolve({ filter: /^mmd-search-index$/ }, (args) => ({
                 path: args.path,
-                namespace: 'mmd-si-ns',
+                namespace: "mmd-si-ns",
             }));
 
-            build.onLoad({ filter: /.*/, namespace: 'mmd-si-ns' }, async () => {
+            build.onLoad({ filter: /.*/, namespace: "mmd-si-ns" }, async () => {
                 return {
                     contents: `export const searchIndexJson = ${searchIndex};`,
-                    loader: 'ts',
+                    loader: "ts",
                 };
             });
 
@@ -124,20 +128,21 @@ export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild
             });
 
             build.onEnd(async () => {
-                await Promise.all(additionalOutputFiles.map(f => {
-                    const fileName = path.basename(f);
+                await Promise.all(
+                    additionalOutputFiles.map((f) => {
+                        const fileName = path.basename(f);
 
-                    let outDir = process.cwd();
-                    if (build.initialOptions.outdir) {
-                        outDir = build.initialOptions.outdir;
-                    }                
-                    else if (build.initialOptions.outfile) {
-                        outDir = path.dirname(build.initialOptions.outfile);
-                    }
+                        let outDir = process.cwd();
+                        if (build.initialOptions.outdir) {
+                            outDir = build.initialOptions.outdir;
+                        } else if (build.initialOptions.outfile) {
+                            outDir = path.dirname(build.initialOptions.outfile);
+                        }
 
-                    return fs.copyFile(f, path.join(outDir, fileName));
-                }))
+                        return fs.copyFile(f, path.join(outDir, fileName));
+                    })
+                );
             });
-        }
+        },
     };
-};
+}

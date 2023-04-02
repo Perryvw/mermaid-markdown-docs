@@ -1,54 +1,55 @@
 {
-  "name": "mermaid-markdown-docs",
-  "version": "0.0.8",
-  "description": "A documentation framework allowing you to easily make a documentation website from markdown files, with mermaid diagrams and search built-in!",
-  "repository": "https://github.com/Perryvw/mermaid-markdown-docs",
-  "bugs": {
-    "url": "https://github.com/Perryvw/mermaid-markdown-docs/issues"
-  },
-  "license": "MIT",
-  "keywords": [
-    "documentation",
-    "markdown",
-    "mermaid",
-    "search",
-    "esbuild"
-  ],
-  "files": [
-    "dist/app/**/*",
-    "dist/build/**/*",
-    "dist/static/*.html",
-    "dist/static/*.css"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "build:docs": "node dist/cli/cli.js build",
-    "dev": "tsc && concurrently \"tsc --watch\" \"node dist/cli/cli.js serve\""
-  },
-  "bin": {
-    "mermaid-markdown-docs": "./dist/cli/cli.js"
-  },
-  "dependencies": {
-    "chokidar": "^3.5.3",
-    "esbuild": "^0.17.5",
-    "highlight.js": "^11.7.0",
-    "lunr": "^2.3.9",
-    "markdown-it": "^13.0.1",
-    "markdown-it-front-matter": "^0.2.3",
-    "mermaid": "^9.4.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.8.0",
-    "striptags": "^3.2.0",
-    "yaml": "^2.2.1"
-  },
-  "devDependencies": {
-    "@types/lunr": "^2.3.4",
-    "@types/markdown-it": "^12.2.3",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "concurrently": "^7.6.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.5"
-  }
+    "name": "mermaid-markdown-docs",
+    "version": "0.0.8",
+    "description": "A documentation framework allowing you to easily make a documentation website from markdown files, with mermaid diagrams and search built-in!",
+    "repository": "https://github.com/Perryvw/mermaid-markdown-docs",
+    "bugs": {
+        "url": "https://github.com/Perryvw/mermaid-markdown-docs/issues"
+    },
+    "license": "MIT",
+    "keywords": [
+        "documentation",
+        "markdown",
+        "mermaid",
+        "search",
+        "esbuild"
+    ],
+    "files": [
+        "dist/app/**/*",
+        "dist/build/**/*",
+        "dist/static/*.html",
+        "dist/static/*.css"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "build:docs": "node dist/cli/cli.js build",
+        "dev": "tsc && concurrently \"tsc --watch\" \"node dist/cli/cli.js serve\""
+    },
+    "bin": {
+        "mermaid-markdown-docs": "./dist/cli/cli.js"
+    },
+    "dependencies": {
+        "chokidar": "^3.5.3",
+        "esbuild": "^0.17.5",
+        "highlight.js": "^11.7.0",
+        "lunr": "^2.3.9",
+        "markdown-it": "^13.0.1",
+        "markdown-it-front-matter": "^0.2.3",
+        "mermaid": "^9.4.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.8.0",
+        "striptags": "^3.2.0",
+        "yaml": "^2.2.1"
+    },
+    "devDependencies": {
+        "@types/lunr": "^2.3.4",
+        "@types/markdown-it": "^12.2.3",
+        "@types/react": "^18.0.27",
+        "@types/react-dom": "^18.0.10",
+        "concurrently": "^7.6.0",
+        "prettier": "^2.8.7",
+        "ts-node": "^10.9.1",
+        "typescript": "^4.9.5"
+    }
 }

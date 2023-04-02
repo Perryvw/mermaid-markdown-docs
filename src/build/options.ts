@@ -8,18 +8,16 @@ export interface BuildOptions {
 
 export const DEFAULT_OPTIONS: Required<BuildOptions> = {
     outDir: "out",
-    docsDir: "docs"
+    docsDir: "docs",
 };
 
 const CONFIG_FILE_NAME = "mmd.configuration.json";
 
-export function tryReadConfigurationFile(): BuildOptions & SiteOptions
-{
+export function tryReadConfigurationFile(): BuildOptions & SiteOptions {
     if (fs.existsSync(CONFIG_FILE_NAME)) {
         const configurationTxt = fs.readFileSync(CONFIG_FILE_NAME);
         return JSON.parse(configurationTxt.toString());
-    }
-    else {
+    } else {
         return {};
     }
 }

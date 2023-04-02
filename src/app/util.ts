@@ -7,12 +7,9 @@ export function isHomepage(docfile: DocFile): boolean {
 export function stripExtension(path: string): string {
     const separatorIndex = path.lastIndexOf(".");
 
-    if (separatorIndex > 0)
-    {
+    if (separatorIndex > 0) {
         return path.substring(0, separatorIndex);
-    }
-    else
-    {
+    } else {
         return path;
     }
 }

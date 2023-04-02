@@ -8,12 +8,12 @@ This documentation website is generated using [Mermaid-Markdown-Docs](https://gi
 
 ## Built-in features:
 
-* Documentation websites can be generated entirely from markdown files.
-* Built-in support for [Mermaid diagrams](https://mermaid.js.org/)
-* Built-in search functionality using [Lunr.js](https://lunrjs.com/)
-* Development server with automatic reloading when changes are detected
-* Fast build speeds thanks to running on esbuild
-* Independent output bundle, it is just html and js, it can run anywhere!
+-   Documentation websites can be generated entirely from markdown files.
+-   Built-in support for [Mermaid diagrams](https://mermaid.js.org/)
+-   Built-in search functionality using [Lunr.js](https://lunrjs.com/)
+-   Development server with automatic reloading when changes are detected
+-   Fast build speeds thanks to running on esbuild
+-   Independent output bundle, it is just html and js, it can run anywhere!
 
 ```mermaid
 graph LR

@@ -8,42 +8,34 @@ enum ActionType {
     Error,
     Help,
     Build,
-    Serve
+    Serve,
 }
 
 type CliAction =
-    { type: ActionType.Help; }
-    | { type: ActionType.Build; }
-    | { type: ActionType.Serve; }
-    | { type: ActionType.Error; message: string; };
+    | { type: ActionType.Help }
+    | { type: ActionType.Build }
+    | { type: ActionType.Serve }
+    | { type: ActionType.Error; message: string };
 
 function validateCliArguments(args: string[]): CliAction {
     if (args.length < 3) {
         return { type: ActionType.Help };
     }
 
-    if (args[2] === "build")
-    {
+    if (args[2] === "build") {
         return { type: ActionType.Build };
-    }
-    else if (args[2] === "serve")
-    {
+    } else if (args[2] === "serve") {
         return { type: ActionType.Serve };
-    }
-    else if (args[2] === "help" || args[2] === "-h")
-    {
+    } else if (args[2] === "help" || args[2] === "-h") {
         return { type: ActionType.Help };
-    }
-    else
-    {
+    } else {
         return { type: ActionType.Error, message: `Action '${args[2]}' not recognized, see -h` };
     }
 }
 
 const action = validateCliArguments(process.argv);
 
-if (action.type === ActionType.Help)
-{
+if (action.type === ActionType.Help) {
     console.log(`
 mermaid-markdown-docs builds a documentation website from markdown files. It has built-in
 support for mermaid diagrams and documentation search without requiring external services.
@@ -54,19 +46,13 @@ mermaid-markdown-docs help                  Display this help page
 mermaid-markdown-docs build [options]       Build the documentation website
 mermaid-markdown-docs serve [options]       Start a server and file watcher for local development
 `);
-}
-else if (action.type === ActionType.Build)
-{
+} else if (action.type === ActionType.Build) {
     const config = tryReadConfigurationFile();
     const p = build(config);
-    p.then(ctx => ctx.dispose());
-}
-else if (action.type === ActionType.Serve)
-{
+    p.then((ctx) => ctx.dispose());
+} else if (action.type === ActionType.Serve) {
     const config = tryReadConfigurationFile();
     serve(config);
-}
-else
-{
+} else {
     throw action.message;
 }
