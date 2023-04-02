@@ -12,4 +12,5 @@ export type DocTree = DocTreeEntry[];
 export interface SiteOptions {
     title?: string;
     repository?: string;
+    customCSS?: string;
 }

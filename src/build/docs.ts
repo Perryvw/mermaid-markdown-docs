@@ -1,5 +1,6 @@
 import * as esbuild from "esbuild";
 import * as fs from "fs/promises";
+import * as fsSync from "fs";
 import * as path from "path";
 
 import MarkdownIt from "markdown-it";
@@ -88,13 +89,17 @@ export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild
             let siteOptions: SiteOptions = undefined!;
 
             build.onStart(async () => {
-                docs = await findDocFiles(docsDir, docsDir);
+                // Get settings
                 options = tryReadConfigurationFile();
                 siteOptions = {
                     title: options.title,
                     repository: options.repository,
                 };
 
+                // Find docs
+                docs = await findDocFiles(docsDir, docsDir);
+
+                // Make sure to emit additional files at end of compilation
                 additionalOutputFiles = [];
                 for (const f of iterateDocFiles(docs)) {
                     additionalOutputFiles.push(...f.fileDependencies);
@@ -102,20 +107,32 @@ export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild
             });
 
             build.onEnd(async () => {
+                let outDir = process.cwd();
+                if (build.initialOptions.outdir) {
+                    outDir = build.initialOptions.outdir;
+                } else if (build.initialOptions.outfile) {
+                    outDir = path.dirname(build.initialOptions.outfile);
+                }
+
+                // Include custom css
+                if (options.customCSS) {
+                    const cssPath = path.isAbsolute(options.customCSS)
+                        ? options.customCSS
+                        : path.resolve(options.customCSS);
+
+                    if (fsSync.existsSync(cssPath)) {
+                        await fs.copyFile(cssPath, path.join(outDir, "styles.css"));
+                    } else {
+                        console.error(`Could not find custom CSS file ${cssPath}!`);
+                    }
+                }
+
                 // deduplicate files
                 const uniqueAdditionalOutputFiles = [...new Set(additionalOutputFiles).values()];
 
                 await Promise.all(
                     uniqueAdditionalOutputFiles.map((f) => {
                         const fileName = path.basename(f);
-
-                        let outDir = process.cwd();
-                        if (build.initialOptions.outdir) {
-                            outDir = build.initialOptions.outdir;
-                        } else if (build.initialOptions.outfile) {
-                            outDir = path.dirname(build.initialOptions.outfile);
-                        }
-
                         return fs.copyFile(f, path.join(outDir, fileName));
                     })
                 );
