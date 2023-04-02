@@ -18,9 +18,9 @@ The configuration is just simple JSON:
 
 | Key        | Description                                                           |
 | ---------- | --------------------------------------------------------------------- |
-| title      | The title to show at the top of the page.                             |
+| title      | The title to show at the top of the page                              |
 | repository | If present, places a github icon with link to the give repository url |
-| customCSS  | If set, overrides the default CSS file with the provided file         |
+| customCSS  | Override the default CSS file with your own                           |
 
 ### Build option keys
 

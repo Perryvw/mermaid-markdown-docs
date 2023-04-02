@@ -15,13 +15,14 @@
         "esbuild"
     ],
     "files": [
-        "dist/app/**/*",
-        "dist/build/**/*",
-        "dist/static/*.html",
-        "dist/static/*.css"
+        "dist/app/**/*.js",
+        "dist/build/**/*.js",
+        "dist/cli/**/*.js",
+        "dist/static/**/*"
     ],
     "scripts": {
         "build": "tsc",
+        "prepublishOnly": "npm run build",
         "build:docs": "node dist/cli/cli.js build",
         "dev": "tsc && concurrently \"tsc --watch\" \"node dist/cli/cli.js serve\""
     },
