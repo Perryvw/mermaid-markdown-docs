@@ -13,7 +13,7 @@ import striptags from "striptags";
 
 import type { DocTree, SiteOptions } from "../common/mmd-docs-types";
 import { iterateDocFiles, pageTitle } from "./util";
-import { tryReadConfigurationFile } from "./options";
+import { BuildOptions, tryReadConfigurationFile } from "./options";
 import { stripExtension } from "../app/util";
 
 let lastFrontMatter = {};
@@ -79,11 +79,48 @@ export async function findDocFiles(docsDirectory: string, pathPrefix: string): P
 }
 
 export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild.Plugin {
-    let additionalOutputFiles: string[] = [];
-
     return {
         name: "mmd-content-plugin",
         async setup(build) {
+            let additionalOutputFiles: string[] = [];
+            let docs: DocTree = undefined!;
+            let options: BuildOptions & SiteOptions = undefined!;
+            let siteOptions: SiteOptions = undefined!;
+
+            build.onStart(async () => {
+                docs = await findDocFiles(docsDir, docsDir);
+                options = tryReadConfigurationFile();
+                siteOptions = {
+                    title: options.title,
+                    repository: options.repository,
+                };
+
+                additionalOutputFiles = [];
+                for (const f of iterateDocFiles(docs)) {
+                    additionalOutputFiles.push(...f.fileDependencies);
+                }
+            });
+
+            build.onEnd(async () => {
+                // deduplicate files
+                const uniqueAdditionalOutputFiles = [...new Set(additionalOutputFiles).values()];
+
+                await Promise.all(
+                    uniqueAdditionalOutputFiles.map((f) => {
+                        const fileName = path.basename(f);
+
+                        let outDir = process.cwd();
+                        if (build.initialOptions.outdir) {
+                            outDir = build.initialOptions.outdir;
+                        } else if (build.initialOptions.outfile) {
+                            outDir = path.dirname(build.initialOptions.outfile);
+                        }
+
+                        return fs.copyFile(f, path.join(outDir, fileName));
+                    })
+                );
+            });
+
             // Docs bundle
             build.onResolve({ filter: /^mmd-docs$/ }, (args) => ({
                 path: args.path,
@@ -91,20 +128,9 @@ export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild
             }));
 
             build.onLoad({ filter: /.*/, namespace: "mmd-ns" }, async () => {
-                const docsTree = await findDocFiles(docsDir, docsDir);
-                const options = tryReadConfigurationFile();
-                const siteOptions: SiteOptions = {
-                    title: options.title,
-                    repository: options.repository,
-                };
-
-                for (const f of iterateDocFiles(docsTree)) {
-                    additionalOutputFiles.push(...f.fileDependencies);
-                }
-
                 return {
                     contents:
-                        `export const content = ${JSON.stringify(docsTree)};` +
+                        `export const content = ${JSON.stringify(docs)};` +
                         `export const options = ${JSON.stringify(siteOptions)};`,
                     loader: "ts",
                 };
@@ -121,27 +147,6 @@ export function docsContentPlugin(docsDir: string, searchIndex: string): esbuild
                     contents: `export const searchIndexJson = ${searchIndex};`,
                     loader: "ts",
                 };
-            });
-
-            build.onStart(() => {
-                additionalOutputFiles = [];
-            });
-
-            build.onEnd(async () => {
-                await Promise.all(
-                    additionalOutputFiles.map((f) => {
-                        const fileName = path.basename(f);
-
-                        let outDir = process.cwd();
-                        if (build.initialOptions.outdir) {
-                            outDir = build.initialOptions.outdir;
-                        } else if (build.initialOptions.outfile) {
-                            outDir = path.dirname(build.initialOptions.outfile);
-                        }
-
-                        return fs.copyFile(f, path.join(outDir, fileName));
-                    })
-                );
             });
         },
     };
